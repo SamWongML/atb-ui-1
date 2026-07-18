@@ -13,30 +13,30 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { api } from "@multica/core/api";
-import type { Skill } from "@multica/core/types";
-import { useWorkspaceId } from "@multica/core/hooks";
-import { isImeComposing } from "@multica/core/utils";
+import { api } from "@atb/core/api";
+import type { Skill } from "@atb/core/types";
+import { useWorkspaceId } from "@atb/core/hooks";
+import { isImeComposing } from "@atb/core/utils";
 import {
   skillDetailOptions,
   workspaceKeys,
-} from "@multica/core/workspace/queries";
+} from "@atb/core/workspace/queries";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
-} from "@multica/ui/components/ui/dialog";
+} from "@atb/ui/components/ui/dialog";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@multica/ui/components/ui/tooltip";
-import { Button } from "@multica/ui/components/ui/button";
-import { Input } from "@multica/ui/components/ui/input";
-import { Label } from "@multica/ui/components/ui/label";
-import { Textarea } from "@multica/ui/components/ui/textarea";
-import { useScrollFade } from "@multica/ui/hooks/use-scroll-fade";
-import { cn } from "@multica/ui/lib/utils";
+} from "@atb/ui/components/ui/tooltip";
+import { Button } from "@atb/ui/components/ui/button";
+import { Input } from "@atb/ui/components/ui/input";
+import { Label } from "@atb/ui/components/ui/label";
+import { Textarea } from "@atb/ui/components/ui/textarea";
+import { useScrollFade } from "@atb/ui/hooks/use-scroll-fade";
+import { cn } from "@atb/ui/lib/utils";
 import { openExternal } from "../../platform";
 import { useT } from "../../i18n";
 

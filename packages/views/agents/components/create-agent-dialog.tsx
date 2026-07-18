@@ -8,33 +8,33 @@ import { RuntimePicker, isRuntimeUsableForUser } from "./runtime-picker";
 import { InstructionsEditor } from "./instructions-editor";
 import { SkillMultiSelect } from "./skill-multi-select";
 import { AvatarPicker } from "./avatar-picker";
-import { api } from "@multica/core/api";
-import { useWorkspaceId } from "@multica/core/hooks";
-import { workspaceKeys } from "@multica/core/workspace/queries";
+import { api } from "@atb/core/api";
+import { useWorkspaceId } from "@atb/core/hooks";
+import { workspaceKeys } from "@atb/core/workspace/queries";
 import type {
   Agent,
   AgentVisibility,
   RuntimeDevice,
   MemberWithUser,
   CreateAgentRequest,
-} from "@multica/core/types";
-import { isImeComposing } from "@multica/core/utils";
+} from "@atb/core/types";
+import { isImeComposing } from "@atb/core/utils";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@multica/ui/components/ui/dialog";
-import { Button } from "@multica/ui/components/ui/button";
-import { Input } from "@multica/ui/components/ui/input";
-import { Label } from "@multica/ui/components/ui/label";
+} from "@atb/ui/components/ui/dialog";
+import { Button } from "@atb/ui/components/ui/button";
+import { Input } from "@atb/ui/components/ui/input";
+import { Label } from "@atb/ui/components/ui/label";
 import { toast } from "sonner";
 import {
   AGENT_DESCRIPTION_MAX_LENGTH,
   VISIBILITY_DESCRIPTION,
   VISIBILITY_LABEL,
-} from "@multica/core/agents";
+} from "@atb/core/agents";
 import { CharCounter } from "./char-counter";
 import { useT } from "../../i18n";
 

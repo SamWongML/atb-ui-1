@@ -10,13 +10,13 @@ import {
 import { toast } from "sonner";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
-import type { AgentRuntime, MemberWithUser } from "@multica/core/types";
-import { deriveWorkload } from "@multica/core/agents";
+import type { AgentRuntime, MemberWithUser } from "@atb/core/types";
+import { deriveWorkload } from "@atb/core/agents";
 import {
   deriveRuntimeHealth,
   runtimeUsageOptions,
-} from "@multica/core/runtimes";
-import { useDeleteRuntime } from "@multica/core/runtimes/mutations";
+} from "@atb/core/runtimes";
+import { useDeleteRuntime } from "@atb/core/runtimes/mutations";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,19 +26,19 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@multica/ui/components/ui/alert-dialog";
-import { Button } from "@multica/ui/components/ui/button";
+} from "@atb/ui/components/ui/alert-dialog";
+import { Button } from "@atb/ui/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@multica/ui/components/ui/dropdown-menu";
+} from "@atb/ui/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@multica/ui/components/ui/tooltip";
+} from "@atb/ui/components/ui/tooltip";
 import { ActorAvatar } from "../../common/actor-avatar";
 import { workloadConfig } from "../../agents/presence";
 import { ProviderLogo } from "./provider-logo";

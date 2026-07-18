@@ -1,7 +1,7 @@
-import { cn } from "@multica/ui/lib/utils";
+import { cn } from "@atb/ui/lib/utils";
 
-export const githubUrl = "https://github.com/multica-ai/multica";
-export const twitterUrl = "https://x.com/MulticaAI";
+export const githubUrl = "https://github.com/auto-tobe-ai/auto-tobe";
+export const twitterUrl = "https://x.com/AutoTobe";
 
 export function GitHubMark({ className }: { className?: string }) {
   return (

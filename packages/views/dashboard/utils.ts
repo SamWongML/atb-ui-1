@@ -2,7 +2,7 @@ import type {
   DashboardUsageDaily,
   DashboardUsageByAgent,
   DashboardAgentRunTime,
-} from "@multica/core/types";
+} from "@atb/core/types";
 import { estimateCost, estimateCostBreakdown, type DailyTokenData } from "../runtimes/utils";
 
 // ---------------------------------------------------------------------------

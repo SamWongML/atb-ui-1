@@ -8,16 +8,16 @@ import type {
   AgentRuntime,
   AgentTask,
   MemberWithUser,
-} from "@multica/core/types";
-import { useAuthStore } from "@multica/core/auth";
-import { useWorkspaceId } from "@multica/core/hooks";
+} from "@atb/core/types";
+import { useAuthStore } from "@atb/core/auth";
+import { useWorkspaceId } from "@atb/core/hooks";
 import {
   agentListOptions,
   memberListOptions,
-} from "@multica/core/workspace/queries";
-import { agentTaskSnapshotOptions } from "@multica/core/agents";
-import { paths, useWorkspaceSlug } from "@multica/core/paths";
-import { DataTable } from "@multica/ui/components/ui/data-table";
+} from "@atb/core/workspace/queries";
+import { agentTaskSnapshotOptions } from "@atb/core/agents";
+import { paths, useWorkspaceSlug } from "@atb/core/paths";
+import { DataTable } from "@atb/ui/components/ui/data-table";
 import { useNavigation } from "../../navigation";
 import { type RuntimeRow, createRuntimeColumns } from "./runtime-columns";
 import { useT } from "../../i18n";

@@ -3,19 +3,19 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { captureEvent } from "@multica/core/analytics";
-import { setCurrentWorkspace } from "@multica/core/platform";
-import { useAuthStore } from "@multica/core/auth";
+import { captureEvent } from "@atb/core/analytics";
+import { setCurrentWorkspace } from "@atb/core/platform";
+import { useAuthStore } from "@atb/core/auth";
 import {
   completeOnboarding,
   ONBOARDING_STEP_ORDER,
   saveQuestionnaire,
   type OnboardingStep,
   type QuestionnaireAnswers,
-} from "@multica/core/onboarding";
-import { workspaceListOptions } from "@multica/core/workspace/queries";
-import type { Workspace } from "@multica/core/types";
-import { DragStrip } from "@multica/views/platform";
+} from "@atb/core/onboarding";
+import { workspaceListOptions } from "@atb/core/workspace/queries";
+import type { Workspace } from "@atb/core/types";
+import { DragStrip } from "@atb/views/platform";
 import { StepHeader } from "./components/step-header";
 import { StepWelcome } from "./steps/step-welcome";
 import { StepQuestionnaire } from "./steps/step-questionnaire";

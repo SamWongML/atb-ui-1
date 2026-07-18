@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { Button } from "@multica/ui/components/ui/button";
-import { paths } from "@multica/core/paths";
+import { Button } from "@atb/ui/components/ui/button";
+import { paths } from "@atb/core/paths";
 import { useNavigation } from "../navigation";
 import { useLogout } from "../auth";
 import { DragStrip } from "../platform";

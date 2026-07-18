@@ -1,16 +1,16 @@
 "use client";
 
 import { toast } from "sonner";
-import { useTheme } from "@multica/ui/components/common/theme-provider";
-import { cn } from "@multica/ui/lib/utils";
+import { useTheme } from "@atb/ui/components/common/theme-provider";
+import { cn } from "@atb/ui/lib/utils";
 import {
   DEFAULT_LOCALE,
   SUPPORTED_LOCALES,
   type SupportedLocale,
-} from "@multica/core/i18n";
-import { useLocaleAdapter } from "@multica/core/i18n/react";
-import { useAuthStore } from "@multica/core/auth";
-import { api } from "@multica/core/api";
+} from "@atb/core/i18n";
+import { useLocaleAdapter } from "@atb/core/i18n/react";
+import { useAuthStore } from "@atb/core/auth";
+import { api } from "@atb/core/api";
 import { useT } from "../../i18n";
 
 const LIGHT_COLORS = {

@@ -5,13 +5,13 @@ import {
   QueryClientProvider,
   QueryObserver,
 } from "@tanstack/react-query";
-import { setApiInstance } from "@multica/core/api";
-import { agentTaskSnapshotKeys, agentTasksKeys } from "@multica/core/agents/queries";
-import { useBatchDeleteIssues, useDeleteIssue } from "@multica/core/issues/mutations";
-import { issueKeys } from "@multica/core/issues/queries";
-import { labelKeys } from "@multica/core/labels/queries";
-import { WorkspaceSlugProvider } from "@multica/core/paths";
-import { workspaceKeys } from "@multica/core/workspace/queries";
+import { setApiInstance } from "@atb/core/api";
+import { agentTaskSnapshotKeys, agentTasksKeys } from "@atb/core/agents/queries";
+import { useBatchDeleteIssues, useDeleteIssue } from "@atb/core/issues/mutations";
+import { issueKeys } from "@atb/core/issues/queries";
+import { labelKeys } from "@atb/core/labels/queries";
+import { WorkspaceSlugProvider } from "@atb/core/paths";
+import { workspaceKeys } from "@atb/core/workspace/queries";
 import type {
   AgentTask,
   Attachment,
@@ -22,7 +22,7 @@ import type {
   ListIssuesCache,
   TimelineEntry,
   Workspace,
-} from "@multica/core/types";
+} from "@atb/core/types";
 
 const WS_ID = "ws-1";
 const SLUG = "test";

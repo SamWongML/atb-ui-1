@@ -40,13 +40,13 @@ import { Download, FileText, Loader2, X } from "lucide-react";
 import { createLowlight, common } from "lowlight";
 // @ts-expect-error -- hast-util-to-html has no bundled type declarations
 import { toHtml } from "hast-util-to-html";
-import { cn } from "@multica/ui/lib/utils";
+import { cn } from "@atb/ui/lib/utils";
 import {
   api,
   PreviewTooLargeError,
   PreviewUnsupportedError,
-} from "@multica/core/api";
-import type { Attachment } from "@multica/core/types";
+} from "@atb/core/api";
+import type { Attachment } from "@atb/core/types";
 import { useT } from "../i18n";
 import { openExternal } from "../platform";
 import { ReadonlyContent } from "./readonly-content";

@@ -129,6 +129,15 @@ importers:
 
   apps/web:
     dependencies:
+      '@atb/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@atb/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      '@atb/views':
+        specifier: workspace:*
+        version: link:../../packages/views
       '@base-ui/react':
         specifier: ^1.3.0
         version: 1.3.0(@types/react@19.2.14)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -147,15 +156,6 @@ importers:
       '@floating-ui/dom':
         specifier: ^1.7.6
         version: 1.7.6
-      '@multica/core':
-        specifier: workspace:*
-        version: link:../../packages/core
-      '@multica/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
-      '@multica/views':
-        specifier: workspace:*
-        version: link:../../packages/views
       '@tanstack/react-query':
         specifier: ^5.96.2
         version: 5.96.2(react@19.2.3)
@@ -356,7 +356,7 @@ importers:
         specifier: 'catalog:'
         version: 5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
     devDependencies:
-      '@multica/tsconfig':
+      '@atb/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@testing-library/react':
@@ -506,7 +506,7 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
     devDependencies:
-      '@multica/tsconfig':
+      '@atb/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@types/linkify-it':
@@ -527,6 +527,12 @@ importers:
 
   packages/views:
     dependencies:
+      '@atb/core':
+        specifier: workspace:*
+        version: link:../core
+      '@atb/ui':
+        specifier: workspace:*
+        version: link:../ui
       '@base-ui/react':
         specifier: ^1.3.0
         version: 1.3.0(@types/react@19.2.14)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -542,12 +548,6 @@ importers:
       '@floating-ui/dom':
         specifier: ^1.7.6
         version: 1.7.6
-      '@multica/core':
-        specifier: workspace:*
-        version: link:../core
-      '@multica/ui':
-        specifier: workspace:*
-        version: link:../ui
       '@tanstack/react-query':
         specifier: 'catalog:'
         version: 5.96.2(react@19.2.3)
@@ -681,7 +681,7 @@ importers:
         specifier: 'catalog:'
         version: 5.0.12(@types/react@19.2.14)(immer@11.1.4)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
     devDependencies:
-      '@multica/tsconfig':
+      '@atb/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@testing-library/jest-dom':

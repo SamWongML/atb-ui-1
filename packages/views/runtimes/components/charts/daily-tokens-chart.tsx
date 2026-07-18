@@ -10,7 +10,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from "@multica/ui/components/ui/chart";
+} from "@atb/ui/components/ui/chart";
 import { formatTokens, type DailyTokenData } from "../../utils";
 
 // Four-segment stack — input / output / cache read / cache write. Unlike the

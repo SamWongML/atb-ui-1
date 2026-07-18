@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, useContext, useState, useCallback, useMemo } from "react";
-import { useConfigStore } from "@multica/core/config";
-import { LOCALE_COOKIE } from "@multica/core/i18n";
+import { useConfigStore } from "@atb/core/config";
+import { LOCALE_COOKIE } from "@atb/core/i18n";
 import { createEnDict } from "./en";
 import { createZhDict } from "./zh";
 import type { LandingDict, Locale } from "./types";

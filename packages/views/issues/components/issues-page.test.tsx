@@ -1,13 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { Issue } from "@multica/core/types";
-import { I18nProvider } from "@multica/core/i18n/react";
+import type { Issue } from "@atb/core/types";
+import { I18nProvider } from "@atb/core/i18n/react";
 import enCommon from "../../locales/en/common.json";
 import enIssues from "../../locales/en/issues.json";
 
 const TEST_RESOURCES = { en: { common: enCommon, issues: enIssues } };
-vi.mock("@multica/core/hooks", () => ({
+vi.mock("@atb/core/hooks", () => ({
   useWorkspaceId: () => "ws-1",
 }));
 
@@ -15,9 +15,9 @@ vi.mock("@multica/core/hooks", () => ({
 // Mocks
 // ---------------------------------------------------------------------------
 
-// Mock @multica/core/auth
+// Mock @atb/core/auth
 const mockAuthUser = { id: "user-1", email: "test@test.com", name: "Test User" };
-vi.mock("@multica/core/auth", () => ({
+vi.mock("@atb/core/auth", () => ({
   useAuthStore: Object.assign(
     (selector?: any) => {
       const state = { user: mockAuthUser, isAuthenticated: true };
@@ -29,12 +29,12 @@ vi.mock("@multica/core/auth", () => ({
   createAuthStore: vi.fn(),
 }));
 
-// Mock @multica/core/paths — after the URL-driven workspace refactor,
+// Mock @atb/core/paths — after the URL-driven workspace refactor,
 // useCurrentWorkspace derives from the workspace slug in URL Context. Tests
 // don't mount a real route, so we short-circuit to a fixed fixture.
-vi.mock("@multica/core/paths", async () => {
-  const actual = await vi.importActual<typeof import("@multica/core/paths")>(
-    "@multica/core/paths",
+vi.mock("@atb/core/paths", async () => {
+  const actual = await vi.importActual<typeof import("@atb/core/paths")>(
+    "@atb/core/paths",
   );
   return {
     ...actual,
@@ -43,7 +43,7 @@ vi.mock("@multica/core/paths", async () => {
   };
 });
 
-// Mock @multica/views/navigation (AppLink + useNavigation)
+// Mock @atb/views/navigation (AppLink + useNavigation)
 vi.mock("../../navigation", () => ({
   AppLink: ({ children, href, ...props }: any) => (
     <a href={href} {...props}>
@@ -61,7 +61,7 @@ vi.mock("../../workspace/workspace-avatar", () => ({
 
 // Mock api (queries use api internally)
 const mockListIssues = vi.hoisted(() => vi.fn().mockResolvedValue({ issues: [], total: 0 }));
-vi.mock("@multica/core/api", () => ({
+vi.mock("@atb/core/api", () => ({
   api: {
     listIssues: (...args: any[]) => mockListIssues(...args),
     updateIssue: vi.fn(),
@@ -78,7 +78,7 @@ vi.mock("@multica/core/api", () => ({
 }));
 
 // Mock issue config
-vi.mock("@multica/core/issues/config", () => ({
+vi.mock("@atb/core/issues/config", () => ({
   ALL_STATUSES: ["backlog", "todo", "in_progress", "in_review", "done", "blocked", "cancelled"],
   BOARD_STATUSES: ["backlog", "todo", "in_progress", "in_review", "done", "blocked"],
   STATUS_ORDER: ["backlog", "todo", "in_progress", "in_review", "done", "blocked", "cancelled"],
@@ -134,7 +134,7 @@ const mockViewState = {
   toggleListCollapsed: vi.fn(),
 };
 
-vi.mock("@multica/core/issues/stores/view-store", () => ({
+vi.mock("@atb/core/issues/stores/view-store", () => ({
   useClearFiltersOnWorkspaceChange: () => {},
   viewStorePersistOptions: () => ({ name: "test", storage: undefined, partialize: (s: any) => s }),
   mergeViewStatePersisted: (_p: unknown, c: any) => c,
@@ -166,7 +166,7 @@ vi.mock("@multica/core/issues/stores/view-store", () => ({
   ],
 }));
 
-vi.mock("@multica/core/issues/stores/view-store-context", () => ({
+vi.mock("@atb/core/issues/stores/view-store-context", () => ({
   ViewStoreProvider: ({ children }: { children: React.ReactNode }) => children,
   useViewStore: (selector?: any) => (selector ? selector(mockViewState) : mockViewState),
   useViewStoreApi: () => ({ getState: () => mockViewState, setState: vi.fn(), subscribe: vi.fn() }),
@@ -174,7 +174,7 @@ vi.mock("@multica/core/issues/stores/view-store-context", () => ({
 
 let mockScope = "all";
 
-vi.mock("@multica/core/issues/stores/issues-scope-store", () => ({
+vi.mock("@atb/core/issues/stores/issues-scope-store", () => ({
   useIssuesScopeStore: Object.assign(
     (selector?: any) => {
       const state = { scope: mockScope, setScope: vi.fn() };
@@ -184,7 +184,7 @@ vi.mock("@multica/core/issues/stores/issues-scope-store", () => ({
   ),
 }));
 
-vi.mock("@multica/core/issues/stores/selection-store", () => ({
+vi.mock("@atb/core/issues/stores/selection-store", () => ({
   useIssueSelectionStore: Object.assign(
     (selector?: any) => {
       const state = { selectedIds: new Set(), toggle: vi.fn(), clear: vi.fn(), setAll: vi.fn() };
@@ -194,7 +194,7 @@ vi.mock("@multica/core/issues/stores/selection-store", () => ({
   ),
 }));
 
-vi.mock("@multica/core/issues/stores/recent-issues-store", () => ({
+vi.mock("@atb/core/issues/stores/recent-issues-store", () => ({
   useRecentIssuesStore: Object.assign(
     (selector?: any) => {
       const state = { byWorkspace: {}, recordVisit: vi.fn(), pruneWorkspaces: vi.fn() };
@@ -211,7 +211,7 @@ vi.mock("@multica/core/issues/stores/recent-issues-store", () => ({
   selectRecentIssues: () => () => [],
 }));
 
-vi.mock("@multica/core/modals", () => ({
+vi.mock("@atb/core/modals", () => ({
   useModalStore: Object.assign(
     () => ({ open: vi.fn() }),
     { getState: () => ({ open: vi.fn() }) },

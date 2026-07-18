@@ -3,28 +3,28 @@
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
-import { cn } from "@multica/ui/lib/utils";
-import { Skeleton } from "@multica/ui/components/ui/skeleton";
-import { Button } from "@multica/ui/components/ui/button";
+import { cn } from "@atb/ui/lib/utils";
+import { Skeleton } from "@atb/ui/components/ui/skeleton";
+import { Button } from "@atb/ui/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@multica/ui/components/ui/collapsible";
+} from "@atb/ui/components/ui/collapsible";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@multica/ui/components/ui/tooltip";
+} from "@atb/ui/components/ui/tooltip";
 import { ChevronRight, ChevronDown, Brain, AlertCircle, AlertTriangle, Copy } from "lucide-react";
-import { useScrollFade } from "@multica/ui/hooks/use-scroll-fade";
-import { useAutoScroll } from "@multica/ui/hooks/use-auto-scroll";
-import { taskMessagesOptions } from "@multica/core/chat/queries";
-import { Markdown } from "@multica/views/common/markdown";
+import { useScrollFade } from "@atb/ui/hooks/use-scroll-fade";
+import { useAutoScroll } from "@atb/ui/hooks/use-auto-scroll";
+import { taskMessagesOptions } from "@atb/core/chat/queries";
+import { Markdown } from "@atb/views/common/markdown";
 import { copyMarkdown } from "../../editor";
-import type { AgentAvailability } from "@multica/core/agents";
-import type { ChatMessage, ChatPendingTask, TaskMessagePayload, TaskFailureReason } from "@multica/core/types";
-import type { ChatTimelineItem } from "@multica/core/chat";
+import type { AgentAvailability } from "@atb/core/agents";
+import type { ChatMessage, ChatPendingTask, TaskMessagePayload, TaskFailureReason } from "@atb/core/types";
+import type { ChatTimelineItem } from "@atb/core/chat";
 import { failureReasonLabel } from "../../agents/components/tabs/task-failure";
 import { TaskStatusPill } from "./task-status-pill";
 import { formatElapsedMs } from "../lib/format";

@@ -10,24 +10,24 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Agent, UpdateAgentRequest } from "@multica/core/types";
+import type { Agent, UpdateAgentRequest } from "@atb/core/types";
 import {
   type AgentPresenceDetail,
   useWorkspacePresenceMap,
-} from "@multica/core/agents";
-import { api, ApiError } from "@multica/core/api";
-import { useAuthStore } from "@multica/core/auth";
-import { useWorkspaceId } from "@multica/core/hooks";
-import { useWorkspacePaths } from "@multica/core/paths";
+} from "@atb/core/agents";
+import { api, ApiError } from "@atb/core/api";
+import { useAuthStore } from "@atb/core/auth";
+import { useWorkspaceId } from "@atb/core/hooks";
+import { useWorkspacePaths } from "@atb/core/paths";
 import {
   agentListOptions,
   memberListOptions,
   workspaceKeys,
-} from "@multica/core/workspace/queries";
-import { runtimeListOptions } from "@multica/core/runtimes";
-import { useAgentPermissions } from "@multica/core/permissions";
-import { Button } from "@multica/ui/components/ui/button";
-import { CapabilityBanner } from "@multica/ui/components/common/capability-banner";
+} from "@atb/core/workspace/queries";
+import { runtimeListOptions } from "@atb/core/runtimes";
+import { useAgentPermissions } from "@atb/core/permissions";
+import { Button } from "@atb/ui/components/ui/button";
+import { CapabilityBanner } from "@atb/ui/components/common/capability-banner";
 import {
   Dialog,
   DialogContent,
@@ -35,14 +35,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@multica/ui/components/ui/dialog";
+} from "@atb/ui/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@multica/ui/components/ui/dropdown-menu";
-import { Skeleton } from "@multica/ui/components/ui/skeleton";
+} from "@atb/ui/components/ui/dropdown-menu";
+import { Skeleton } from "@atb/ui/components/ui/skeleton";
 import { AppLink, useNavigation } from "../../navigation";
 import { PageHeader } from "../../layout/page-header";
 import { availabilityConfig } from "../presence";

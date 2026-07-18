@@ -2,8 +2,8 @@ import type {
   RuntimeUsage,
   RuntimeUsageByAgent,
   RuntimeUsageByHour,
-} from "@multica/core/types";
-import { getCustomPricing } from "@multica/core/runtimes/custom-pricing-store";
+} from "@atb/core/types";
+import { getCustomPricing } from "@atb/core/runtimes/custom-pricing-store";
 
 // ---------------------------------------------------------------------------
 // Formatting helpers

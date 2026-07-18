@@ -1,18 +1,18 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ActorAvatar as ActorAvatarBase } from "@multica/ui/components/common/actor-avatar";
-import { Skeleton } from "@multica/ui/components/ui/skeleton";
-import { useWorkspaceId } from "@multica/core/hooks";
-import { useWorkspacePaths } from "@multica/core/paths";
-import { agentListOptions } from "@multica/core/workspace/queries";
+import { ActorAvatar as ActorAvatarBase } from "@atb/ui/components/common/actor-avatar";
+import { Skeleton } from "@atb/ui/components/ui/skeleton";
+import { useWorkspaceId } from "@atb/core/hooks";
+import { useWorkspacePaths } from "@atb/core/paths";
+import { agentListOptions } from "@atb/core/workspace/queries";
 import {
   agentTaskSnapshotOptions,
   useAgentPresenceDetail,
-} from "@multica/core/agents";
-import { issueDetailOptions } from "@multica/core/issues";
-import { timeAgo } from "@multica/core/utils";
-import type { AgentTask } from "@multica/core/types";
+} from "@atb/core/agents";
+import { issueDetailOptions } from "@atb/core/issues";
+import { timeAgo } from "@atb/core/utils";
+import type { AgentTask } from "@atb/core/types";
 import { AlertTriangle } from "lucide-react";
 import { AppLink } from "../../navigation";
 import { useT } from "../../i18n";

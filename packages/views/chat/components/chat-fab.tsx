@@ -2,16 +2,16 @@
 
 import { MessageCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { cn } from "@multica/ui/lib/utils";
-import { useChatStore } from "@multica/core/chat";
-import { chatSessionsOptions, pendingChatTasksOptions } from "@multica/core/chat/queries";
-import { useWorkspaceId } from "@multica/core/hooks";
-import { createLogger } from "@multica/core/logger";
+import { cn } from "@atb/ui/lib/utils";
+import { useChatStore } from "@atb/core/chat";
+import { chatSessionsOptions, pendingChatTasksOptions } from "@atb/core/chat/queries";
+import { useWorkspaceId } from "@atb/core/hooks";
+import { createLogger } from "@atb/core/logger";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@multica/ui/components/ui/tooltip";
+} from "@atb/ui/components/ui/tooltip";
 import { useT } from "../../i18n";
 
 const logger = createLogger("chat.ui");

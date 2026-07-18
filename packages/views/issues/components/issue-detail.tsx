@@ -20,27 +20,27 @@ import {
   Users,
 } from "lucide-react";
 import { PageHeader } from "../../layout/page-header";
-import { Skeleton } from "@multica/ui/components/ui/skeleton";
-import { Button } from "@multica/ui/components/ui/button";
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@multica/ui/components/ui/resizable";
-import { Sheet, SheetContent } from "@multica/ui/components/ui/sheet";
-import { useIsMobile } from "@multica/ui/hooks/use-mobile";
+import { Skeleton } from "@atb/ui/components/ui/skeleton";
+import { Button } from "@atb/ui/components/ui/button";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@atb/ui/components/ui/resizable";
+import { Sheet, SheetContent } from "@atb/ui/components/ui/sheet";
+import { useIsMobile } from "@atb/ui/hooks/use-mobile";
 import { ContentEditor, type ContentEditorRef, TitleEditor, useFileDropZone, FileDropOverlay } from "../../editor";
-import { FileUploadButton } from "@multica/ui/components/common/file-upload-button";
+import { FileUploadButton } from "@atb/ui/components/common/file-upload-button";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "@multica/ui/components/ui/tooltip";
-import { Popover, PopoverTrigger, PopoverContent } from "@multica/ui/components/ui/popover";
-import { Checkbox } from "@multica/ui/components/ui/checkbox";
-import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from "@multica/ui/components/ui/command";
-import { AvatarGroup, AvatarGroupCount } from "@multica/ui/components/ui/avatar";
+} from "@atb/ui/components/ui/tooltip";
+import { Popover, PopoverTrigger, PopoverContent } from "@atb/ui/components/ui/popover";
+import { Checkbox } from "@atb/ui/components/ui/checkbox";
+import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from "@atb/ui/components/ui/command";
+import { AvatarGroup, AvatarGroupCount } from "@atb/ui/components/ui/avatar";
 import { ActorAvatar } from "../../common/actor-avatar";
 import { PropRow } from "../../common/prop-row";
-import type { Attachment, Issue, IssueStatus, IssuePriority, TimelineEntry, UpdateIssueRequest } from "@multica/core/types";
-import { STATUS_CONFIG, PRIORITY_CONFIG } from "@multica/core/issues/config";
-import { useUpdateIssue } from "@multica/core/issues/mutations";
+import type { Attachment, Issue, IssueStatus, IssuePriority, TimelineEntry, UpdateIssueRequest } from "@atb/core/types";
+import { STATUS_CONFIG, PRIORITY_CONFIG } from "@atb/core/issues/config";
+import { useUpdateIssue } from "@atb/core/issues/mutations";
 import { toast } from "sonner";
 import { StatusIcon, PriorityIcon, StatusPicker, PriorityPicker, DueDatePicker, AssigneePicker, LabelPicker } from ".";
 import { IssueActionsDropdown, useIssueActions } from "../actions";
@@ -53,23 +53,23 @@ import { AgentLiveCard } from "./agent-live-card";
 import { ExecutionLogSection } from "./execution-log-section";
 import { PullRequestList } from "./pull-request-list";
 import { useQuery } from "@tanstack/react-query";
-import { useAuthStore } from "@multica/core/auth";
-import { useCurrentWorkspace, useWorkspacePaths } from "@multica/core/paths";
-import { useActorName } from "@multica/core/workspace/hooks";
-import { useWorkspaceId } from "@multica/core/hooks";
-import { issueListOptions, issueDetailOptions, childIssuesOptions, issueUsageOptions, issueAttachmentsOptions } from "@multica/core/issues/queries";
-import { memberListOptions, agentListOptions } from "@multica/core/workspace/queries";
-import { useRecentIssuesStore } from "@multica/core/issues/stores";
-import { useIssueSelectionStore } from "@multica/core/issues/stores/selection-store";
+import { useAuthStore } from "@atb/core/auth";
+import { useCurrentWorkspace, useWorkspacePaths } from "@atb/core/paths";
+import { useActorName } from "@atb/core/workspace/hooks";
+import { useWorkspaceId } from "@atb/core/hooks";
+import { issueListOptions, issueDetailOptions, childIssuesOptions, issueUsageOptions, issueAttachmentsOptions } from "@atb/core/issues/queries";
+import { memberListOptions, agentListOptions } from "@atb/core/workspace/queries";
+import { useRecentIssuesStore } from "@atb/core/issues/stores";
+import { useIssueSelectionStore } from "@atb/core/issues/stores/selection-store";
 import { BatchActionToolbar } from "./batch-action-toolbar";
 import { useIssueTimeline } from "../hooks/use-issue-timeline";
 import { useIssueReactions } from "../hooks/use-issue-reactions";
 import { useIssueSubscribers } from "../hooks/use-issue-subscribers";
-import { ReactionBar } from "@multica/ui/components/common/reaction-bar";
-import { useFileUpload } from "@multica/core/hooks/use-file-upload";
-import { api } from "@multica/core/api";
-import { timeAgo } from "@multica/core/utils";
-import { cn } from "@multica/ui/lib/utils";
+import { ReactionBar } from "@atb/ui/components/common/reaction-bar";
+import { useFileUpload } from "@atb/core/hooks/use-file-upload";
+import { api } from "@atb/core/api";
+import { timeAgo } from "@atb/core/utils";
+import { cn } from "@atb/ui/lib/utils";
 
 import { ProgressRing } from "./progress-ring";
 import { matchesPinyin } from "../../editor/extensions/pinyin-match";
@@ -552,7 +552,7 @@ interface IssueDetailProps {
 // IssueDetail
 // ---------------------------------------------------------------------------
 
-export function IssueDetail({ issueId, onDelete, onDone, defaultSidebarOpen = true, layoutId = "multica_issue_detail_layout", highlightCommentId }: IssueDetailProps) {
+export function IssueDetail({ issueId, onDelete, onDone, defaultSidebarOpen = true, layoutId = "atb_issue_detail_layout", highlightCommentId }: IssueDetailProps) {
   const { t } = useT("issues");
   const id = issueId;
   const router = useNavigation();
@@ -961,7 +961,7 @@ export function IssueDetail({ issueId, onDelete, onDone, defaultSidebarOpen = tr
   // Real fix is in-app search (separate PR); this is the toast stopgap.
   useEffect(() => {
     if (items.length <= 30) return;
-    const flagKey = `multica_cmdF_warned:${id}`;
+    const flagKey = `atb_cmdF_warned:${id}`;
     const handler = (e: KeyboardEvent) => {
       if (e.key !== "f" || !(e.metaKey || e.ctrlKey)) return;
       if (sessionStorage.getItem(flagKey)) return;

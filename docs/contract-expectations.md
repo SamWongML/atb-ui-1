@@ -39,16 +39,16 @@ are shown as `:id`. Every path is prefixed by the api origin
 
 | Header | Value | When |
 |---|---|---|
-| `Authorization` | `Bearer <token>` | Token mode only (localStorage `multica_token`) |
+| `Authorization` | `Bearer <token>` | Token mode only (localStorage `atb_token`) |
 | `X-Workspace-Slug` | active workspace slug | Set whenever a workspace is active (URL-driven singleton, `workspace-storage.ts`) |
-| `X-CSRF-Token` | value of `multica_csrf` cookie | Cookie mode (double-submit CSRF) |
+| `X-CSRF-Token` | value of `atb_csrf` cookie | Cookie mode (double-submit CSRF) |
 | `X-Client-Platform` / `X-Client-Version` / `X-Client-OS` | client identity | Always (web sends `platform=web`, `version`) |
 | `X-Request-ID` | per-request uuid | Always (log correlation) |
 | `credentials` | `include` | Always (cookies flow cross-origin — api must allow-credentials) |
 
 **Auth modes.** Cookie mode is the default (`cookieAuth = !hasLegacyToken()`):
-HttpOnly session cookie + `multica_csrf` double-submit token. Token mode is the
-legacy path — a bearer token in localStorage under `multica_token`. `401` on any
+HttpOnly session cookie + `atb_csrf` double-submit token. Token mode is the
+legacy path — a bearer token in localStorage under `atb_token`. `401` on any
 request runs `handleUnauthorized()` → clears the token → `onUnauthorized` callback.
 
 **Login / magic-link / OAuth endpoints:**

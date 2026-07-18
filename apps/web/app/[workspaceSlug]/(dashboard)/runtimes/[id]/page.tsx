@@ -1,7 +1,7 @@
 "use client";
 
 import { use } from "react";
-import { RuntimeDetailPage } from "@multica/views/runtimes";
+import { RuntimeDetailPage } from "@atb/views/runtimes";
 
 export default function RuntimeDetailRoute({
   params,

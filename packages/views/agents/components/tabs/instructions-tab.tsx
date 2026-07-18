@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Loader2, Save } from "lucide-react";
-import type { Agent } from "@multica/core/types";
-import { Button } from "@multica/ui/components/ui/button";
+import type { Agent } from "@atb/core/types";
+import { Button } from "@atb/ui/components/ui/button";
 import { ContentEditor } from "../../../editor/content-editor";
 import { useT } from "../../../i18n";
 

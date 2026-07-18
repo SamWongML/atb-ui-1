@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useAuthStore } from "@multica/core/auth";
+import { useAuthStore } from "@atb/core/auth";
 import { useLocale } from "../i18n";
 import {
   ClaudeCodeLogo,

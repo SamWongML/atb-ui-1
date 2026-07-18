@@ -12,8 +12,8 @@ import {
   Bell,
   Plug,
 } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@multica/ui/components/ui/tabs";
-import { useCurrentWorkspace } from "@multica/core/paths";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@atb/ui/components/ui/tabs";
+import { useCurrentWorkspace } from "@atb/core/paths";
 import { useNavigation } from "../../navigation";
 import { AccountTab } from "./account-tab";
 import { PreferencesTab } from "./preferences-tab";

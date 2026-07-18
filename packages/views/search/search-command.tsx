@@ -29,33 +29,33 @@ import type {
   MemberWithUser,
   SearchIssueResult,
   SearchProjectResult,
-} from "@multica/core/types";
-import { api } from "@multica/core/api";
+} from "@atb/core/types";
+import { api } from "@atb/core/api";
 import {
   openCreateIssueWithPreference,
   selectRecentIssues,
   useRecentIssuesStore,
-} from "@multica/core/issues/stores";
-import { issueDetailOptions } from "@multica/core/issues/queries";
-import { useWorkspaceId } from "@multica/core";
-import { useWorkspacePaths } from "@multica/core/paths";
-import type { WorkspacePaths } from "@multica/core/paths";
-import { useModalStore } from "@multica/core/modals";
-import { memberListOptions } from "@multica/core/workspace/queries";
+} from "@atb/core/issues/stores";
+import { issueDetailOptions } from "@atb/core/issues/queries";
+import { useWorkspaceId } from "@atb/core";
+import { useWorkspacePaths } from "@atb/core/paths";
+import type { WorkspacePaths } from "@atb/core/paths";
+import { useModalStore } from "@atb/core/modals";
+import { memberListOptions } from "@atb/core/workspace/queries";
 import { StatusIcon } from "../issues/components";
 import { ProjectIcon } from "../projects/components/project-icon";
-import { STATUS_CONFIG } from "@multica/core/issues/config";
-import { PROJECT_STATUS_CONFIG } from "@multica/core/projects/config";
-import type { ProjectStatus } from "@multica/core/types";
-import { ActorAvatar as ActorAvatarBase } from "@multica/ui/components/common/actor-avatar";
+import { STATUS_CONFIG } from "@atb/core/issues/config";
+import { PROJECT_STATUS_CONFIG } from "@atb/core/projects/config";
+import type { ProjectStatus } from "@atb/core/types";
+import { ActorAvatar as ActorAvatarBase } from "@atb/ui/components/common/actor-avatar";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@multica/ui/components/ui/dialog";
-import { useTheme } from "@multica/ui/components/common/theme-provider";
+} from "@atb/ui/components/ui/dialog";
+import { useTheme } from "@atb/ui/components/common/theme-provider";
 import { useNavigation } from "../navigation";
 import { useT } from "../i18n";
 import { matchesPinyin } from "../editor/extensions/pinyin-match";

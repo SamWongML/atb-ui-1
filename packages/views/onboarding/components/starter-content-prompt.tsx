@@ -4,19 +4,19 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "@multica/core/api";
-import { useAuthStore } from "@multica/core/auth";
-import { useNavigation } from "@multica/views/navigation";
-import { useCurrentWorkspace, paths } from "@multica/core/paths";
-import type { QuestionnaireAnswers } from "@multica/core/onboarding";
-import { pinKeys } from "@multica/core/pins";
-import { projectKeys } from "@multica/core/projects";
-import { issueKeys } from "@multica/core/issues/queries";
+import { api } from "@atb/core/api";
+import { useAuthStore } from "@atb/core/auth";
+import { useNavigation } from "@atb/views/navigation";
+import { useCurrentWorkspace, paths } from "@atb/core/paths";
+import type { QuestionnaireAnswers } from "@atb/core/onboarding";
+import { pinKeys } from "@atb/core/pins";
+import { projectKeys } from "@atb/core/projects";
+import { issueKeys } from "@atb/core/issues/queries";
 import {
   memberListOptions,
   workspaceKeys,
-} from "@multica/core/workspace/queries";
-import { Button } from "@multica/ui/components/ui/button";
+} from "@atb/core/workspace/queries";
+import { Button } from "@atb/ui/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -24,7 +24,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@multica/ui/components/ui/dialog";
+} from "@atb/ui/components/ui/dialog";
 import {
   buildImportPayload,
   type StarterContentLocale,

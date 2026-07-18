@@ -6,19 +6,21 @@ This file provides guidance to AI agents when working with code in this reposito
 > All authoritative architecture, coding rules, commands, and conventions
 > live in **CLAUDE.md** at the project root. Read that file first.
 
+> This is the extracted `auto-tobe` **frontend** workspace — no backend lives
+> here. It talks to a separate `api` + `gateway`. See `INTEGRATION.md`.
+
 ## Quick Reference
 
 ### Architecture
 
-Go backend + monorepo frontend (pnpm workspaces + Turborepo) with shared packages.
+Frontend monorepo (pnpm workspaces + Turborepo) with shared packages.
 
-- `server/` — Go backend (Chi router, sqlc, gorilla/websocket)
 - `apps/web/` — Next.js frontend (App Router)
-- `apps/desktop/` — Electron desktop app
 - `packages/core/` — Headless business logic (Zustand stores, React Query hooks, API client)
 - `packages/ui/` — Atomic UI components (shadcn/Base UI, zero business logic)
 - `packages/views/` — Shared business pages/components
 - `packages/tsconfig/` — Shared TypeScript config
+- `packages/eslint-config/` — Shared ESLint config
 
 ### State Management (critical)
 
@@ -30,18 +32,18 @@ Go backend + monorepo frontend (pnpm workspaces + Turborepo) with shared package
 ### Package Boundaries (hard rules)
 
 - `packages/core/` — zero react-dom, zero localStorage, zero process.env
-- `packages/ui/` — zero `@multica/core` imports
+- `packages/ui/` — zero `@atb/core` imports
 - `packages/views/` — zero `next/*`, zero `react-router-dom`, use `NavigationAdapter` for routing
 - `apps/web/platform/` — only place for Next.js APIs
 
 ### Commands
 
 ```bash
-make dev              # Auto-setup + start everything
+make dev              # pnpm dev:web (Next.js dev server, port 3000)
 pnpm typecheck        # TypeScript check
+pnpm lint             # ESLint
 pnpm test             # TS unit tests (Vitest)
-make test             # Go tests
-make check            # Full verification pipeline
+make check            # typecheck + lint + test + build
 ```
 
 See CLAUDE.md for the complete command reference.

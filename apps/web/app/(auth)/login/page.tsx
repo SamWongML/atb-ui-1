@@ -3,28 +3,28 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useQueryClient, type QueryClient } from "@tanstack/react-query";
-import { sanitizeNextUrl, useAuthStore } from "@multica/core/auth";
-import { useConfigStore } from "@multica/core/config";
-import { workspaceKeys } from "@multica/core/workspace/queries";
+import { sanitizeNextUrl, useAuthStore } from "@atb/core/auth";
+import { useConfigStore } from "@atb/core/config";
+import { workspaceKeys } from "@atb/core/workspace/queries";
 import {
   paths,
   resolvePostAuthDestination,
   useHasOnboarded,
-} from "@multica/core/paths";
-import { api } from "@multica/core/api";
-import type { Workspace } from "@multica/core/types";
+} from "@atb/core/paths";
+import { api } from "@atb/core/api";
+import type { Workspace } from "@atb/core/types";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-} from "@multica/ui/components/ui/card";
-import { Button } from "@multica/ui/components/ui/button";
+} from "@atb/ui/components/ui/card";
+import { Button } from "@atb/ui/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { setLoggedInCookie } from "@/features/auth/auth-cookie";
-import { LoginPage, validateCliCallback } from "@multica/views/auth";
-import { useT } from "@multica/views/i18n";
+import { LoginPage, validateCliCallback } from "@atb/views/auth";
+import { useT } from "@atb/views/i18n";
 
 /**
  * Pick where a logged-in user with no explicit `?next=` should land.
@@ -89,7 +89,7 @@ function LoginPageContent() {
         .issueCliToken()
         .then(({ token }) => {
           setDesktopToken(token);
-          window.location.href = `multica://auth/callback?token=${encodeURIComponent(token)}`;
+          window.location.href = `atb://auth/callback?token=${encodeURIComponent(token)}`;
         })
         .catch((err) => {
           setDesktopError(
@@ -169,7 +169,7 @@ function LoginPageContent() {
               <Button
                 variant="outline"
                 onClick={() => {
-                  window.location.href = `multica://auth/callback?token=${encodeURIComponent(desktopToken)}`;
+                  window.location.href = `atb://auth/callback?token=${encodeURIComponent(desktopToken)}`;
                 }}
               >
                 {t(($) => $.web.desktop_handoff.open_button)}

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { useCustomPricingStore } from "@multica/core/runtimes/custom-pricing-store";
+import { useCustomPricingStore } from "@atb/core/runtimes/custom-pricing-store";
 
 import {
   aggregateCostByModel,

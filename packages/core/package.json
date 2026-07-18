@@ -1,5 +1,5 @@
 {
-  "name": "@multica/core",
+  "name": "@atb/core",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -107,7 +107,7 @@
     "react": "catalog:"
   },
   "devDependencies": {
-    "@multica/tsconfig": "workspace:*",
+    "@atb/tsconfig": "workspace:*",
     "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
     "jsdom": "catalog:",

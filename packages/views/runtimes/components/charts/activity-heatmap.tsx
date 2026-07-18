@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import type { RuntimeUsage } from "@multica/core/types";
-import { useCustomPricingStore } from "@multica/core/runtimes/custom-pricing-store";
+import type { RuntimeUsage } from "@atb/core/types";
+import { useCustomPricingStore } from "@atb/core/runtimes/custom-pricing-store";
 import { estimateCost } from "../../utils";
 import { useT } from "../../../i18n";
 

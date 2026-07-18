@@ -4,23 +4,23 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeftRight, Check, ChevronRight, Maximize2, Minimize2, X as XIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { DialogTitle } from "@multica/ui/components/ui/dialog";
-import { Button } from "@multica/ui/components/ui/button";
-import { Switch } from "@multica/ui/components/ui/switch";
-import { api, ApiError } from "@multica/core/api";
-import { useWorkspaceId } from "@multica/core/hooks";
-import { useCurrentWorkspace } from "@multica/core/paths";
-import { agentListOptions, squadListOptions } from "@multica/core/workspace/queries";
-import { projectListOptions } from "@multica/core/projects/queries";
+import { DialogTitle } from "@atb/ui/components/ui/dialog";
+import { Button } from "@atb/ui/components/ui/button";
+import { Switch } from "@atb/ui/components/ui/switch";
+import { api, ApiError } from "@atb/core/api";
+import { useWorkspaceId } from "@atb/core/hooks";
+import { useCurrentWorkspace } from "@atb/core/paths";
+import { agentListOptions, squadListOptions } from "@atb/core/workspace/queries";
+import { projectListOptions } from "@atb/core/projects/queries";
 import {
   useQuickCreateStore,
   type QuickCreateActorType,
-} from "@multica/core/issues/stores/quick-create-store";
-import { useIssueDraftStore } from "@multica/core/issues/stores/draft-store";
-import { useCreateModeStore } from "@multica/core/issues/stores/create-mode-store";
-import { useFileUpload } from "@multica/core/hooks/use-file-upload";
-import { formatShortcut, modKey, enterKey } from "@multica/core/platform";
-import type { Agent, Squad } from "@multica/core/types";
+} from "@atb/core/issues/stores/quick-create-store";
+import { useIssueDraftStore } from "@atb/core/issues/stores/draft-store";
+import { useCreateModeStore } from "@atb/core/issues/stores/create-mode-store";
+import { useFileUpload } from "@atb/core/hooks/use-file-upload";
+import { formatShortcut, modKey, enterKey } from "@atb/core/platform";
+import type { Agent, Squad } from "@atb/core/types";
 import { ActorAvatar } from "../common/actor-avatar";
 import { PillButton } from "../common/pill-button";
 import { ProjectPicker } from "../projects/components/project-picker";
@@ -31,15 +31,15 @@ import {
   PickerSection,
   PickerEmpty,
 } from "../issues/components/pickers/property-picker";
-import { useAuthStore } from "@multica/core/auth";
-import { memberListOptions } from "@multica/core/workspace/queries";
+import { useAuthStore } from "@atb/core/auth";
+import { memberListOptions } from "@atb/core/workspace/queries";
 import {
   ContentEditor,
   type ContentEditorRef,
   useFileDropZone,
   FileDropOverlay,
 } from "../editor";
-import { FileUploadButton } from "@multica/ui/components/common/file-upload-button";
+import { FileUploadButton } from "@atb/ui/components/common/file-upload-button";
 import { useT } from "../i18n";
 import { matchesPinyin } from "../editor/extensions/pinyin-match";
 

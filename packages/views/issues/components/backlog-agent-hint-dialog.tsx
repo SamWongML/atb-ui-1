@@ -5,9 +5,9 @@ import { Archive, ArrowRight, Bot, CheckCircle2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogContent,
-} from "@multica/ui/components/ui/alert-dialog";
-import { Button } from "@multica/ui/components/ui/button";
-import { Checkbox } from "@multica/ui/components/ui/checkbox";
+} from "@atb/ui/components/ui/alert-dialog";
+import { Button } from "@atb/ui/components/ui/button";
+import { Checkbox } from "@atb/ui/components/ui/checkbox";
 import { useT } from "../../i18n";
 
 interface BacklogAgentHintDialogProps {

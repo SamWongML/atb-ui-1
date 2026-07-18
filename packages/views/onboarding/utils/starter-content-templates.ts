@@ -1,8 +1,8 @@
-import type { QuestionnaireAnswers } from "@multica/core/onboarding";
+import type { QuestionnaireAnswers } from "@atb/core/onboarding";
 import type {
   ImportStarterContentPayload,
   ImportStarterIssuePayload,
-} from "@multica/core/api";
+} from "@atb/core/api";
 import * as en from "./starter-content-content-en";
 import * as zh from "./starter-content-content-zh";
 

@@ -11,18 +11,18 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
-import type { AgentRuntime, Agent, MemberWithUser } from "@multica/core/types";
-import { useAuthStore } from "@multica/core/auth";
-import { useWorkspaceId } from "@multica/core/hooks";
-import { memberListOptions, agentListOptions } from "@multica/core/workspace/queries";
-import { useDeleteRuntime, useUpdateRuntime } from "@multica/core/runtimes/mutations";
-import { deriveRuntimeHealth } from "@multica/core/runtimes";
+import type { AgentRuntime, Agent, MemberWithUser } from "@atb/core/types";
+import { useAuthStore } from "@atb/core/auth";
+import { useWorkspaceId } from "@atb/core/hooks";
+import { memberListOptions, agentListOptions } from "@atb/core/workspace/queries";
+import { useDeleteRuntime, useUpdateRuntime } from "@atb/core/runtimes/mutations";
+import { deriveRuntimeHealth } from "@atb/core/runtimes";
 import {
   type AgentPresenceDetail,
   useWorkspacePresenceMap,
-} from "@multica/core/agents";
-import { useWorkspacePaths } from "@multica/core/paths";
-import { Button } from "@multica/ui/components/ui/button";
+} from "@atb/core/agents";
+import { useWorkspacePaths } from "@atb/core/paths";
+import { Button } from "@atb/ui/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,12 +32,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@multica/ui/components/ui/alert-dialog";
+} from "@atb/ui/components/ui/alert-dialog";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@multica/ui/components/ui/tooltip";
+} from "@atb/ui/components/ui/tooltip";
 import { ActorAvatar } from "../../common/actor-avatar";
 import { TimezoneSelect } from "../../common/timezone-select";
 import { AppLink } from "../../navigation";

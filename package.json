@@ -1,10 +1,10 @@
 {
-  "name": "multica",
+  "name": "auto-tobe",
   "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev:web": "turbo dev --filter=@multica/web",
+    "dev:web": "turbo dev --filter=@atb/web",
     "build": "turbo build",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
