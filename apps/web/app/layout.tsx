@@ -14,9 +14,7 @@ import { RESOURCES } from "@atb/views/locales";
 import "./globals.css";
 
 // Font stack: Inter for Latin UI text + system Chinese fonts for zh content.
-// Desktop app uses the same stack via apps/desktop/src/renderer/src/globals.css —
-// keep the CJK fallback tail in sync across both files. The Inter primary family
-// differs by design: next/font produces `__Inter_xxx` (with a synthetic size-adjusted
+// The Inter primary family uses next/font, which produces `__Inter_xxx` (with a synthetic size-adjusted
 // fallback face to prevent FOUT layout shift); desktop uses fontsource's "Inter Variable".
 // Both resolve to Inter glyphs, so rendering is identical in practice.
 // Currently covers English + Simplified Chinese. When ja/ko i18n lands, extend

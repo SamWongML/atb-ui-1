@@ -4,7 +4,7 @@ import type { ImportStarterIssuePayload } from "@atb/core/api";
 // =============================================================================
 // Chinese starter-content body. Mirrors starter-content-content-en.ts in
 // shape; translated and adapted to the conventions in
-// apps/docs/content/docs/developers/conventions.zh.mdx — task / issue /
+// docs/conventions.md (§3 中文风格) — task / issue /
 // skill stay lowercase English; agent / runtime / daemon / workspace are
 // translated; product UI labels (Properties, Assignee, Status, Activity,
 // Live card, Inbox, Members, Settings, Runtimes, Configure, Workspace,
