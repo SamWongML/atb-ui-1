@@ -1,7 +1,7 @@
 "use client";
 
-import { Skeleton } from "@multica/ui/components/ui/skeleton";
-import type { AgentPresenceDetail } from "@multica/core/agents";
+import { Skeleton } from "@atb/ui/components/ui/skeleton";
+import type { AgentPresenceDetail } from "@atb/core/agents";
 import { availabilityConfig, workloadConfig } from "../presence";
 import { useT } from "../../i18n";
 

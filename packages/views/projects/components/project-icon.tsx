@@ -1,5 +1,5 @@
-import type { Project } from "@multica/core/types";
-import { cn } from "@multica/ui/lib/utils";
+import type { Project } from "@atb/core/types";
+import { cn } from "@atb/ui/lib/utils";
 
 export type ProjectIconSize = "sm" | "md" | "lg";
 

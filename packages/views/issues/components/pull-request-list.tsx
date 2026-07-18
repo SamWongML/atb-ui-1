@@ -8,9 +8,9 @@ import {
   GitMerge,
   GitPullRequestDraft,
 } from "lucide-react";
-import { issuePullRequestsOptions } from "@multica/core/github/queries";
-import type { GitHubPullRequest, GitHubPullRequestState } from "@multica/core/types";
-import { cn } from "@multica/ui/lib/utils";
+import { issuePullRequestsOptions } from "@atb/core/github/queries";
+import type { GitHubPullRequest, GitHubPullRequestState } from "@atb/core/types";
+import { cn } from "@atb/ui/lib/utils";
 import { useT } from "../../i18n";
 
 const STATE_ICON: Record<

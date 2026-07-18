@@ -3,13 +3,13 @@
 import { use, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { WorkspaceSlugProvider, paths } from "@multica/core/paths";
-import { workspaceBySlugOptions } from "@multica/core/workspace";
-import { setCurrentWorkspace } from "@multica/core/platform";
-import { useAuthStore } from "@multica/core/auth";
-import { NoAccessPage } from "@multica/views/workspace/no-access-page";
-import { MulticaIcon } from "@multica/ui/components/common/multica-icon";
-import { useWorkspaceSeen } from "@multica/views/workspace/use-workspace-seen";
+import { WorkspaceSlugProvider, paths } from "@atb/core/paths";
+import { workspaceBySlugOptions } from "@atb/core/workspace";
+import { setCurrentWorkspace } from "@atb/core/platform";
+import { useAuthStore } from "@atb/core/auth";
+import { NoAccessPage } from "@atb/views/workspace/no-access-page";
+import { AtbIcon } from "@atb/ui/components/common/atb-icon";
+import { useWorkspaceSeen } from "@atb/views/workspace/use-workspace-seen";
 
 export default function WorkspaceLayout({
   children,
@@ -63,7 +63,7 @@ export default function WorkspaceLayout({
 
   const loadingIndicator = (
     <div className="flex h-svh items-center justify-center">
-      <MulticaIcon className="size-6 animate-pulse" />
+      <AtbIcon className="size-6 animate-pulse" />
     </div>
   );
 

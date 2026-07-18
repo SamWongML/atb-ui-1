@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { describe, expect, it } from "vitest";
 import { render as rtlRender, screen, type RenderOptions } from "@testing-library/react";
-import { ONBOARDING_STEP_ORDER } from "@multica/core/onboarding";
-import { I18nProvider } from "@multica/core/i18n/react";
+import { ONBOARDING_STEP_ORDER } from "@atb/core/onboarding";
+import { I18nProvider } from "@atb/core/i18n/react";
 import enCommon from "../../locales/en/common.json";
 import enOnboarding from "../../locales/en/onboarding.json";
 import { StepHeader } from "./step-header";
@@ -31,7 +31,7 @@ describe("StepHeader", () => {
   });
 
   it("shows 'Step N of M' text matching the current step's position", () => {
-    // workspace is index 1 (0-indexed) → Step 2 of 5
+    // workspace is index 1 (0-indexed) → Step 2 of 3
     render(<StepHeader currentStep="workspace" />);
     expect(
       screen.getByText(`Step 2 of ${ONBOARDING_STEP_ORDER.length}`),
@@ -39,9 +39,9 @@ describe("StepHeader", () => {
   });
 
   it("sets accessible progressbar attrs", () => {
-    render(<StepHeader currentStep="agent" />);
+    render(<StepHeader currentStep="first_issue" />);
     const bar = screen.getByRole("progressbar");
-    expect(bar).toHaveAttribute("aria-valuenow", "4"); // agent is index 3 → step 4
+    expect(bar).toHaveAttribute("aria-valuenow", "3"); // first_issue is index 2 → step 3
     expect(bar).toHaveAttribute("aria-valuemax", String(ONBOARDING_STEP_ORDER.length));
   });
 

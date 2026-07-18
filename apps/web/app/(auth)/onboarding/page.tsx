@@ -3,14 +3,14 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { useAuthStore } from "@multica/core/auth";
+import { useAuthStore } from "@atb/core/auth";
 import {
   paths,
   resolvePostAuthDestination,
   useHasOnboarded,
-} from "@multica/core/paths";
-import { workspaceListOptions } from "@multica/core/workspace/queries";
-import { CliInstallInstructions, OnboardingFlow } from "@multica/views/onboarding";
+} from "@atb/core/paths";
+import { workspaceListOptions } from "@atb/core/workspace/queries";
+import { OnboardingFlow } from "@atb/views/onboarding";
 
 /**
  * Web shell for the onboarding flow. The route is the platform chrome on
@@ -20,10 +20,6 @@ import { CliInstallInstructions, OnboardingFlow } from "@multica/views/onboardin
  * On complete: if a workspace was just created, navigate into it;
  * otherwise fall back to root (proxy / landing picks the user's first ws
  * or bounces to onboarding if still zero).
- *
- * `CliInstallInstructions` is passed in as the `runtimeInstructions`
- * slot so the flow can render it inside the CLI dialog. The commands it
- * shows are hardcoded — nothing environmental to thread through.
  */
 export default function OnboardingPage() {
   const router = useRouter();
@@ -73,7 +69,6 @@ export default function OnboardingPage() {
             router.push(paths.root());
           }
         }}
-        runtimeInstructions={<CliInstallInstructions />}
       />
     </div>
   );

@@ -1,15 +1,15 @@
 "use client";
 
-import { DashboardLayout } from "@multica/views/layout";
-import { MulticaIcon } from "@multica/ui/components/common/multica-icon";
-import { SearchCommand, SearchTrigger } from "@multica/views/search";
-import { ChatFab, ChatWindow } from "@multica/views/chat";
-import { StarterContentPrompt } from "@multica/views/onboarding";
+import { DashboardLayout } from "@atb/views/layout";
+import { AtbIcon } from "@atb/ui/components/common/atb-icon";
+import { SearchCommand, SearchTrigger } from "@atb/views/search";
+import { ChatFab, ChatWindow } from "@atb/views/chat";
+import { StarterContentPrompt } from "@atb/views/onboarding";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <DashboardLayout
-      loadingIndicator={<MulticaIcon className="size-6" />}
+      loadingIndicator={<AtbIcon className="size-6" />}
       searchSlot={<SearchTrigger />}
       extra={
         <>

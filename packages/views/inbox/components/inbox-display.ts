@@ -1,4 +1,4 @@
-import type { InboxItem } from "@multica/core/types";
+import type { InboxItem } from "@atb/core/types";
 
 function singleLine(value: string | null | undefined): string {
   return (value ?? "").replace(/\s+/g, " ").trim();

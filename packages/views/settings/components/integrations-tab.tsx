@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Button } from "@multica/ui/components/ui/button";
-import { Card, CardContent } from "@multica/ui/components/ui/card";
-import { useAuthStore } from "@multica/core/auth";
-import { useWorkspaceId } from "@multica/core/hooks";
-import { memberListOptions } from "@multica/core/workspace/queries";
-import { githubInstallationsOptions } from "@multica/core/github/queries";
-import { api } from "@multica/core/api";
+import { Button } from "@atb/ui/components/ui/button";
+import { Card, CardContent } from "@atb/ui/components/ui/card";
+import { useAuthStore } from "@atb/core/auth";
+import { useWorkspaceId } from "@atb/core/hooks";
+import { memberListOptions } from "@atb/core/workspace/queries";
+import { githubInstallationsOptions } from "@atb/core/github/queries";
+import { api } from "@atb/core/api";
 import { useT } from "../../i18n";
 
 // lucide-react v1.x dropped brand marks (including Github). Render an inline

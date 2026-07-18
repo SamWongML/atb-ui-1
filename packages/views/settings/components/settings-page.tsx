@@ -12,8 +12,8 @@ import {
   Bell,
   Plug,
 } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@multica/ui/components/ui/tabs";
-import { useCurrentWorkspace } from "@multica/core/paths";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@atb/ui/components/ui/tabs";
+import { useCurrentWorkspace } from "@atb/core/paths";
 import { useNavigation } from "../../navigation";
 import { AccountTab } from "./account-tab";
 import { PreferencesTab } from "./preferences-tab";
@@ -61,7 +61,7 @@ export interface ExtraSettingsTab {
 }
 
 interface SettingsPageProps {
-  /** Additional tabs injected by platform (e.g. desktop daemon settings) */
+  /** Additional account tabs injected by the host platform. */
   extraAccountTabs?: ExtraSettingsTab[];
 }
 

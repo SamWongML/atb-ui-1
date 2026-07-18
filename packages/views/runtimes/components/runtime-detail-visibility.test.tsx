@@ -3,8 +3,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import type { AgentRuntime } from "@multica/core/types";
-import { I18nProvider } from "@multica/core/i18n/react";
+import type { AgentRuntime } from "@atb/core/types";
+import { I18nProvider } from "@atb/core/i18n/react";
 import enCommon from "../../locales/en/common.json";
 import enRuntimes from "../../locales/en/runtimes.json";
 import enAgents from "../../locales/en/agents.json";
@@ -15,11 +15,11 @@ const TEST_RESOURCES = {
 
 const mockUpdateRuntime = vi.hoisted(() => vi.fn());
 
-vi.mock("@multica/core/hooks", () => ({
+vi.mock("@atb/core/hooks", () => ({
   useWorkspaceId: () => "ws-1",
 }));
 
-vi.mock("@multica/core/api", () => ({
+vi.mock("@atb/core/api", () => ({
   api: {
     updateRuntime: (...args: unknown[]) => mockUpdateRuntime(...args),
   },
@@ -49,27 +49,27 @@ vi.mock("@tanstack/react-query", async () => {
   };
 });
 
-vi.mock("@multica/core/auth", () => ({
+vi.mock("@atb/core/auth", () => ({
   useAuthStore: (sel: (s: { user: { id: string } }) => unknown) =>
     sel({ user: { id: "user-me" } }),
 }));
 
-vi.mock("@multica/core/runtimes", () => ({
+vi.mock("@atb/core/runtimes", () => ({
   deriveRuntimeHealth: () => "online",
 }));
 
-vi.mock("@multica/core/agents", () => ({
+vi.mock("@atb/core/agents", () => ({
   useWorkspacePresenceMap: () => ({ byAgent: new Map() }),
 }));
 
-vi.mock("@multica/core/paths", () => ({
+vi.mock("@atb/core/paths", () => ({
   useWorkspacePaths: () => ({
     runtimes: () => "/runtimes",
     agentDetail: () => "/agents",
   }),
 }));
 
-vi.mock("@multica/core/runtimes/mutations", () => ({
+vi.mock("@atb/core/runtimes/mutations", () => ({
   useUpdateRuntime: () => ({
     mutate: (
       args: { runtimeId: string; patch: Record<string, unknown> },
@@ -83,10 +83,9 @@ vi.mock("@multica/core/runtimes/mutations", () => ({
   useDeleteRuntime: () => ({ mutate: vi.fn(), isPending: false }),
 }));
 
-// Stubbing ProviderLogo / UsageSection / UpdateSection avoids dragging in
-// chart libs and additional query keys we don't care about here.
+// Stubbing ProviderLogo / UsageSection avoids dragging in chart libs and
+// additional query keys we don't care about here.
 vi.mock("./provider-logo", () => ({ ProviderLogo: () => null }));
-vi.mock("./update-section", () => ({ UpdateSection: () => null }));
 vi.mock("./usage-section", () => ({ UsageSection: () => null }));
 vi.mock("./shared", () => ({ HealthBadge: () => null }));
 vi.mock("../../agents/presence", () => ({

@@ -4,7 +4,7 @@ How the engineering skills should consume this repo's domain documentation when 
 
 ## Layout: single-context
 
-One `CONTEXT.md` + `docs/adr/` at the repo root. This repo is a single product (Multica) with one domain vocabulary; the `packages/*` split (core / ui / views) is an architectural-layer boundary, not a bounded-context boundary.
+One `CONTEXT.md` + `docs/adr/` at the repo root. This repo is a single product (auto-tobe) with one domain vocabulary; the `packages/*` split (core / ui / views) is an architectural-layer boundary, not a bounded-context boundary.
 
 ## Before exploring, read these
 

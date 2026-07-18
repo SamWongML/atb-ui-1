@@ -11,7 +11,6 @@ export const runtimeKeys = {
     ["runtimes", "usage", "by-agent", rid, days] as const,
   usageByHour: (rid: string, days: number) =>
     ["runtimes", "usage", "by-hour", rid, days] as const,
-  latestVersion: () => ["runtimes", "latestVersion"] as const,
 };
 
 // Per-runtime usage. Used by the list view (each row pulls its own activity
@@ -50,27 +49,5 @@ export function runtimeListOptions(wsId: string, owner?: "me") {
   return queryOptions({
     queryKey: owner === "me" ? runtimeKeys.listMine(wsId) : runtimeKeys.list(wsId),
     queryFn: () => api.listRuntimes({ workspace_id: wsId, owner }),
-  });
-}
-
-const GITHUB_RELEASES_URL =
-  "https://api.github.com/repos/multica-ai/multica/releases/latest";
-
-export function latestCliVersionOptions() {
-  return queryOptions({
-    queryKey: runtimeKeys.latestVersion(),
-    queryFn: async (): Promise<string | null> => {
-      try {
-        const resp = await fetch(GITHUB_RELEASES_URL, {
-          headers: { Accept: "application/vnd.github+json" },
-        });
-        if (!resp.ok) return null;
-        const data = await resp.json();
-        return (data.tag_name as string) ?? null;
-      } catch {
-        return null;
-      }
-    },
-    staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }

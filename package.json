@@ -1,26 +1,21 @@
 {
-  "name": "multica",
+  "name": "auto-tobe",
   "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev:web": "turbo dev --filter=@multica/web",
-    "dev:docs": "turbo dev --filter=@multica/docs",
-    "dev:desktop": "turbo dev --filter=@multica/desktop",
-    "dev:desktop:staging": "turbo dev:staging --filter=@multica/desktop",
+    "dev:web": "turbo dev --filter=@atb/web",
     "build": "turbo build",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
     "lint": "turbo lint",
     "clean": "turbo clean && rm -rf node_modules",
-    "ui:add": "cd packages/ui && npx shadcn@latest add",
-    "generate:reserved-slugs": "node scripts/generate-reserved-slugs.mjs"
+    "ui:add": "cd packages/ui && npx shadcn@latest add"
   },
   "packageManager": "pnpm@10.28.2",
   "pnpm": {
     "onlyBuiltDependencies": [
-      "esbuild",
-      "electron"
+      "esbuild"
     ],
     "overrides": {
       "@types/react": "catalog:",

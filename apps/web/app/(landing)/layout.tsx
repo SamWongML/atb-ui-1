@@ -1,6 +1,6 @@
 import { cookies, headers } from "next/headers";
 import { Instrument_Serif, Noto_Serif_SC } from "next/font/google";
-import { LOCALE_COOKIE } from "@multica/core/i18n";
+import { LOCALE_COOKIE } from "@atb/core/i18n";
 import { LocaleProvider } from "@/features/landing/i18n";
 import type { Locale } from "@/features/landing/i18n";
 
@@ -21,13 +21,13 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Organization",
-      name: "Multica",
-      url: "https://www.multica.ai",
-      sameAs: ["https://github.com/multica-ai/multica"],
+      name: "auto-tobe",
+      url: "https://www.auto-tobe.ai",
+      sameAs: ["https://github.com/auto-tobe-ai/auto-tobe"],
     },
     {
       "@type": "SoftwareApplication",
-      name: "Multica",
+      name: "auto-tobe",
       applicationCategory: "ProjectManagement",
       operatingSystem: "Web",
       description:

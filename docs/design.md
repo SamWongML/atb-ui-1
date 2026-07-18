@@ -1,6 +1,6 @@
-# Multica Design System
+# auto-tobe Design System
 
-本文档定义 Multica 的视觉语言和交互规范。所有 UI 开发以此为准。
+本文档定义 auto-tobe 的视觉语言和交互规范。所有 UI 开发以此为准。
 
 ---
 
@@ -73,7 +73,7 @@
 | 代码/数据 | Geist Mono (`--font-mono`) | 代码块、ID、时间戳、等宽数据 |
 | 标题 | `--font-heading`（= `--font-sans`） | 页面标题、区块标题 |
 
-字体栈在 `apps/web/app/layout.tsx` 和 `apps/desktop/src/renderer/src/globals.css` 两处声明，修改时需同步。
+字体栈在 `apps/web/app/layout.tsx` 声明。
 
 ### 3.2 字号纪律
 

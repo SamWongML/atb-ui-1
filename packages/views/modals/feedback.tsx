@@ -7,22 +7,22 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@multica/ui/components/ui/dialog";
-import { Button } from "@multica/ui/components/ui/button";
-import { FileUploadButton } from "@multica/ui/components/common/file-upload-button";
+} from "@atb/ui/components/ui/dialog";
+import { Button } from "@atb/ui/components/ui/button";
+import { FileUploadButton } from "@atb/ui/components/common/file-upload-button";
 import {
   ContentEditor,
   type ContentEditorRef,
   useFileDropZone,
   FileDropOverlay,
 } from "../editor";
-import { useCreateFeedback, useFeedbackDraftStore } from "@multica/core/feedback";
-import { useCurrentWorkspace } from "@multica/core/paths";
-import { useFileUpload } from "@multica/core/hooks/use-file-upload";
-import { api } from "@multica/core/api";
-import { captureFeedbackOpened } from "@multica/core/analytics";
+import { useCreateFeedback, useFeedbackDraftStore } from "@atb/core/feedback";
+import { useCurrentWorkspace } from "@atb/core/paths";
+import { useFileUpload } from "@atb/core/hooks/use-file-upload";
+import { api } from "@atb/core/api";
+import { captureFeedbackOpened } from "@atb/core/analytics";
 import { useT } from "../i18n";
-import { formatShortcut, modKey, enterKey } from "@multica/core/platform";
+import { formatShortcut, modKey, enterKey } from "@atb/core/platform";
 
 const MAX_MESSAGE_LEN = 10000;
 
@@ -96,7 +96,7 @@ export function FeedbackModal({ onClose }: { onClose: () => void }) {
           <p className="mt-1 text-xs text-muted-foreground">
             {t(($) => $.feedback.github_hint_prefix)}
             <a
-              href="https://github.com/multica-ai/multica/issues"
+              href="https://github.com/auto-tobe-ai/auto-tobe/issues"
               target="_blank"
               rel="noopener noreferrer"
               className="text-brand underline decoration-brand/40 underline-offset-2 hover:decoration-brand"

@@ -19,9 +19,11 @@ export interface ClientIdentity {
 
 export interface CoreProviderProps {
   children: React.ReactNode;
-  /** API base URL. Default: "" (same-origin). */
+  /** API base URL (the auto-tobe `api` origin). Default: "" (same-origin). */
   apiBaseUrl?: string;
-  /** WebSocket URL. Default: "ws://localhost:8080/ws". */
+  /** Gateway WebSocket URL (the auto-tobe `gateway` origin, e.g.
+   *  "wss://gateway.example/ws"). Env-driven; default "" leaves realtime
+   *  dormant until configured. */
   wsUrl?: string;
   /** Storage adapter. Default: SSR-safe localStorage wrapper. */
   storage?: StorageAdapter;

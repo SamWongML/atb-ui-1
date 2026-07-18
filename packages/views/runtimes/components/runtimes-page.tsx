@@ -1,24 +1,22 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Plus, Search, Server } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Search, Server } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuthStore } from "@multica/core/auth";
-import { useWorkspaceId } from "@multica/core/hooks";
-import { runtimeListOptions, runtimeKeys } from "@multica/core/runtimes/queries";
-import { useUpdatableRuntimeIds } from "@multica/core/runtimes/hooks";
-import { deriveRuntimeHealth } from "@multica/core/runtimes";
-import { useWSEvent } from "@multica/core/realtime";
-import { Button } from "@multica/ui/components/ui/button";
-import { Input } from "@multica/ui/components/ui/input";
-import { Skeleton } from "@multica/ui/components/ui/skeleton";
+import { useAuthStore } from "@atb/core/auth";
+import { useWorkspaceId } from "@atb/core/hooks";
+import { runtimeListOptions, runtimeKeys } from "@atb/core/runtimes/queries";
+import { deriveRuntimeHealth } from "@atb/core/runtimes";
+import { useWSEvent } from "@atb/core/realtime";
+import { Button } from "@atb/ui/components/ui/button";
+import { Input } from "@atb/ui/components/ui/input";
+import { Skeleton } from "@atb/ui/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@multica/ui/components/ui/tooltip";
+} from "@atb/ui/components/ui/tooltip";
 import { PageHeader } from "../../layout/page-header";
-import { ConnectRemoteDialog } from "./connect-remote-dialog";
 import { RuntimeList } from "./runtime-list";
 import { useT } from "../../i18n";
 
@@ -41,18 +39,6 @@ const HEALTH_DOT: Record<Exclude<HealthFilter, "all">, string> = {
   about_to_gc: "bg-destructive",
 };
 
-interface RuntimesPageProps {
-  /** Desktop-only slot rendered above the runtimes table (e.g. local daemon card) */
-  topSlot?: React.ReactNode;
-  /**
-   * Desktop-only signal: the bundled daemon is still booting / hasn't
-   * registered with the server yet. Forwarded so the empty state can show
-   * a "starting" indicator instead of the static "register a runtime" hint
-   * during the boot window. Web omits this.
-   */
-  bootstrapping?: boolean;
-}
-
 // Re-render every 30s so derived health (recently_lost → offline transitions)
 // catches up even when no underlying query data has changed.
 function useNowTick(intervalMs = 30_000): number {
@@ -64,14 +50,13 @@ function useNowTick(intervalMs = 30_000): number {
   return now;
 }
 
-export function RuntimesPage({ topSlot, bootstrapping }: RuntimesPageProps = {}) {
+export function RuntimesPage() {
   const isLoading = useAuthStore((s) => s.isLoading);
   const wsId = useWorkspaceId();
   const qc = useQueryClient();
   const [scope, setScope] = useState<RuntimeFilter>("mine");
   const [healthFilter, setHealthFilter] = useState<HealthFilter>("all");
   const [search, setSearch] = useState("");
-  const [showConnectDialog, setShowConnectDialog] = useState(false);
 
   // One unified cache per workspace: scope (Mine/All) is a view filter, not
   // a fetch dimension. Splitting on owner used to give us two TanStack cache
@@ -82,12 +67,14 @@ export function RuntimesPage({ topSlot, bootstrapping }: RuntimesPageProps = {})
   );
   const currentUserId = useAuthStore((s) => s.user?.id);
 
-  const handleDaemonEvent = useCallback(() => {
+  // SEAM: refresh the runtime list when a runtime (re-)registers. The
+  // "daemon:register" event name is a backend-contract string that predates
+  // the local→cloud split; keep it until the gateway protocol is reconciled.
+  const handleRuntimeRegister = useCallback(() => {
     qc.invalidateQueries({ queryKey: runtimeKeys.all(wsId) });
   }, [qc, wsId]);
-  useWSEvent("daemon:register", handleDaemonEvent);
+  useWSEvent("daemon:register", handleRuntimeRegister);
 
-  const updatableIds = useUpdatableRuntimeIds(wsId);
   const now = useNowTick();
 
   // Apply scope first, then everything downstream (health counts, list filter)
@@ -130,21 +117,16 @@ export function RuntimesPage({ topSlot, bootstrapping }: RuntimesPageProps = {})
 
   const totalCount = runtimes.length;
   const scopedTotal = scopedRuntimes.length;
-  const showEmpty = totalCount === 0 && !bootstrapping;
+  const showEmpty = totalCount === 0;
 
   return (
     <div className="flex flex-1 min-h-0 flex-col">
-      <PageHeaderBar
-        totalCount={totalCount}
-        onConnectRemote={() => setShowConnectDialog(true)}
-      />
+      <PageHeaderBar totalCount={totalCount} />
 
       <div className="flex flex-1 min-h-0 flex-col gap-4 p-6">
-        {topSlot}
-
         {showEmpty ? (
           <div className="flex flex-1 items-center justify-center">
-            <EmptyState onConnectRemote={() => setShowConnectDialog(true)} />
+            <EmptyState />
           </div>
         ) : (
           <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-lg border bg-background">
@@ -161,21 +143,13 @@ export function RuntimesPage({ topSlot, bootstrapping }: RuntimesPageProps = {})
               total={scopedTotal}
             />
             {filtered.length === 0 ? (
-              <NoMatchesState search={search} healthFilter={healthFilter} scope={scope} bootstrapping={bootstrapping} />
+              <NoMatchesState search={search} healthFilter={healthFilter} scope={scope} />
             ) : (
-              <RuntimeList
-                runtimes={filtered}
-                updatableIds={updatableIds}
-                now={now}
-              />
+              <RuntimeList runtimes={filtered} now={now} />
             )}
           </div>
         )}
       </div>
-
-      {showConnectDialog && (
-        <ConnectRemoteDialog onClose={() => setShowConnectDialog(false)} />
-      )}
     </div>
   );
 }
@@ -185,13 +159,7 @@ export function RuntimesPage({ topSlot, bootstrapping }: RuntimesPageProps = {})
 // Page-level actions (Search, scope, filter) live in the card below.
 // ---------------------------------------------------------------------------
 
-function PageHeaderBar({
-  totalCount,
-  onConnectRemote,
-}: {
-  totalCount: number;
-  onConnectRemote: () => void;
-}) {
+function PageHeaderBar({ totalCount }: { totalCount: number }) {
   const { t } = useT("runtimes");
   return (
     <PageHeader className="justify-between px-5">
@@ -204,21 +172,9 @@ function PageHeaderBar({
           </span>
         )}
         <p className="ml-2 hidden text-xs text-muted-foreground md:block">
-          {t(($) => $.page.tagline)}{" "}
-          <a
-            href="https://multica.ai/docs/daemon-runtimes"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline decoration-muted-foreground/30 underline-offset-4 transition-colors hover:text-foreground"
-          >
-            {t(($) => $.page.learn_more)}
-          </a>
+          {t(($) => $.page.tagline)}
         </p>
       </div>
-      <Button type="button" size="sm" onClick={onConnectRemote}>
-        <Plus className="h-3 w-3" />
-        {t(($) => $.page.connect_remote)}
-      </Button>
     </PageHeader>
   );
 }
@@ -413,7 +369,7 @@ function HealthChip({
 // workspace. Different from "filter matches nothing" (NoMatchesState).
 // ---------------------------------------------------------------------------
 
-function EmptyState({ onConnectRemote }: { onConnectRemote: () => void }) {
+function EmptyState() {
   const { t } = useT("runtimes");
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
@@ -424,15 +380,6 @@ function EmptyState({ onConnectRemote }: { onConnectRemote: () => void }) {
       <p className="mt-1 max-w-md text-sm text-muted-foreground">
         {t(($) => $.page.empty.hint)}
       </p>
-      <Button
-        type="button"
-        size="sm"
-        onClick={onConnectRemote}
-        className="mt-5"
-      >
-        <Plus className="h-3 w-3" />
-        {t(($) => $.page.connect_remote)}
-      </Button>
     </div>
   );
 }
@@ -447,26 +394,12 @@ function NoMatchesState({
   search,
   healthFilter,
   scope,
-  bootstrapping,
 }: {
   search: string;
   healthFilter: HealthFilter;
   scope: RuntimeFilter;
-  bootstrapping?: boolean;
 }) {
   const { t } = useT("runtimes");
-  if (bootstrapping) {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-2 px-4 py-16 text-center">
-        <Server className="h-8 w-8 animate-pulse text-muted-foreground/40" />
-        <p className="text-sm text-muted-foreground">{t(($) => $.page.bootstrapping.title)}</p>
-        <p className="max-w-xs text-xs text-muted-foreground/70">
-          {t(($) => $.page.bootstrapping.hint)}
-        </p>
-      </div>
-    );
-  }
-
   const hasSearch = search.length > 0;
   const hasHealthFilter = healthFilter !== "all";
   const hasScope = scope === "mine";
@@ -519,4 +452,3 @@ function RuntimesPageSkeleton() {
 }
 
 export default RuntimesPage;
-export type { RuntimesPageProps };

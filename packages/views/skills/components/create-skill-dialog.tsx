@@ -6,7 +6,6 @@ import {
   ArrowLeft,
   ChevronRight,
   Download,
-  HardDrive,
   Loader2,
   Pencil,
   Plus,
@@ -14,35 +13,34 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { api } from "@multica/core/api";
-import type { Skill } from "@multica/core/types";
-import { useWorkspaceId } from "@multica/core/hooks";
-import { isImeComposing } from "@multica/core/utils";
+import { api } from "@atb/core/api";
+import type { Skill } from "@atb/core/types";
+import { useWorkspaceId } from "@atb/core/hooks";
+import { isImeComposing } from "@atb/core/utils";
 import {
   skillDetailOptions,
   workspaceKeys,
-} from "@multica/core/workspace/queries";
+} from "@atb/core/workspace/queries";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
-} from "@multica/ui/components/ui/dialog";
+} from "@atb/ui/components/ui/dialog";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@multica/ui/components/ui/tooltip";
-import { Button } from "@multica/ui/components/ui/button";
-import { Input } from "@multica/ui/components/ui/input";
-import { Label } from "@multica/ui/components/ui/label";
-import { Textarea } from "@multica/ui/components/ui/textarea";
-import { useScrollFade } from "@multica/ui/hooks/use-scroll-fade";
-import { cn } from "@multica/ui/lib/utils";
+} from "@atb/ui/components/ui/tooltip";
+import { Button } from "@atb/ui/components/ui/button";
+import { Input } from "@atb/ui/components/ui/input";
+import { Label } from "@atb/ui/components/ui/label";
+import { Textarea } from "@atb/ui/components/ui/textarea";
+import { useScrollFade } from "@atb/ui/hooks/use-scroll-fade";
+import { cn } from "@atb/ui/lib/utils";
 import { openExternal } from "../../platform";
-import { RuntimeLocalSkillImportPanel } from "./runtime-local-skill-import-panel";
 import { useT } from "../../i18n";
 
-type Method = "chooser" | "manual" | "url" | "runtime";
+type Method = "chooser" | "manual" | "url";
 
 function seedAfterCreate(
   qc: ReturnType<typeof useQueryClient>,
@@ -59,7 +57,7 @@ function isNameConflictError(msg: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// Chooser — initial method picker (3 cards)
+// Chooser — initial method picker (2 cards)
 // ---------------------------------------------------------------------------
 
 function MethodChooser({ onChoose }: { onChoose: (m: Method) => void }) {
@@ -67,11 +65,10 @@ function MethodChooser({ onChoose }: { onChoose: (m: Method) => void }) {
   const methods: {
     key: Method;
     icon: typeof Plus;
-    titleKey: "manual" | "url" | "runtime";
+    titleKey: "manual" | "url";
   }[] = [
     { key: "manual", icon: Plus, titleKey: "manual" },
     { key: "url", icon: Download, titleKey: "url" },
-    { key: "runtime", icon: HardDrive, titleKey: "runtime" },
   ];
   return (
     <div className="grid gap-2 p-5">
@@ -442,8 +439,6 @@ export function CreateSkillDialog({
     onClose();
   };
 
-  const wide = method === "runtime";
-
   return (
     <Dialog open onOpenChange={(v) => !v && onClose()}>
       <DialogContent
@@ -451,9 +446,7 @@ export function CreateSkillDialog({
         className={cn(
           "flex flex-col gap-0 overflow-hidden p-0",
           "!transition-all !duration-300 !ease-out",
-          wide
-            ? "!h-[min(600px,85vh)] !max-w-2xl !w-full"
-            : "!h-auto !max-h-[85vh] !max-w-md !w-full",
+          "!h-auto !max-h-[85vh] !max-w-md !w-full",
         )}
       >
         {/* Header */}
@@ -515,9 +508,6 @@ export function CreateSkillDialog({
             onCreated={handleCreated}
             onCancel={() => setMethod("chooser")}
           />
-        )}
-        {method === "runtime" && (
-          <RuntimeLocalSkillImportPanel onImported={handleCreated} />
         )}
       </DialogContent>
     </Dialog>

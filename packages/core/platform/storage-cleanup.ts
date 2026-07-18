@@ -8,15 +8,15 @@ import type { StorageAdapter } from "../types/storage";
  * Also ensure the store uses `createWorkspaceAwareStorage` for its persist config.
  */
 const WORKSPACE_SCOPED_KEYS = [
-  "multica_issue_draft",
-  "multica_issues_view",
-  "multica_issues_scope",
-  "multica_my_issues_view",
-  "multica:chat:selectedAgentId",
-  "multica:chat:activeSessionId",
-  "multica:chat:drafts",
-  "multica:chat:expanded",
-  "multica_navigation",
+  "atb_issue_draft",
+  "atb_issues_view",
+  "atb_issues_scope",
+  "atb_my_issues_view",
+  "auto-tobe:chat:selectedAgentId",
+  "auto-tobe:chat:activeSessionId",
+  "auto-tobe:chat:drafts",
+  "auto-tobe:chat:expanded",
+  "atb_navigation",
 ];
 
 /** Remove all workspace-scoped storage entries for the given workspace slug. */

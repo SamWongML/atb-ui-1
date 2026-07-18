@@ -5,25 +5,25 @@ import { useStore } from "zustand";
 import { toast } from "sonner";
 import { ListTodo } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import type { IssueStatus } from "@multica/core/types";
-import { useWorkspaceId } from "@multica/core/hooks";
-import { BOARD_STATUSES } from "@multica/core/issues/config";
+import type { IssueStatus } from "@atb/core/types";
+import { useWorkspaceId } from "@atb/core/hooks";
+import { BOARD_STATUSES } from "@atb/core/issues/config";
 import {
   childIssueProgressOptions,
   myIssueListOptions,
   type MyIssuesFilter,
-} from "@multica/core/issues/queries";
-import { useUpdateIssue } from "@multica/core/issues/mutations";
+} from "@atb/core/issues/queries";
+import { useUpdateIssue } from "@atb/core/issues/mutations";
 import {
   actorIssuesViewStore,
   type ActorIssuesScope,
-} from "@multica/core/issues/stores/actor-issues-view-store";
-import { useIssueSelectionStore } from "@multica/core/issues/stores/selection-store";
-import { useClearFiltersOnWorkspaceChange } from "@multica/core/issues/stores/view-store";
-import { ViewStoreProvider } from "@multica/core/issues/stores/view-store-context";
-import { Button } from "@multica/ui/components/ui/button";
-import { Skeleton } from "@multica/ui/components/ui/skeleton";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@multica/ui/components/ui/tooltip";
+} from "@atb/core/issues/stores/actor-issues-view-store";
+import { useIssueSelectionStore } from "@atb/core/issues/stores/selection-store";
+import { useClearFiltersOnWorkspaceChange } from "@atb/core/issues/stores/view-store";
+import { ViewStoreProvider } from "@atb/core/issues/stores/view-store-context";
+import { Button } from "@atb/ui/components/ui/button";
+import { Skeleton } from "@atb/ui/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@atb/ui/components/ui/tooltip";
 import { BoardView } from "../issues/components/board-view";
 import { ListView } from "../issues/components/list-view";
 import { BatchActionToolbar } from "../issues/components/batch-action-toolbar";

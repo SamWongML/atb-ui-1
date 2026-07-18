@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ActorAvatar as ActorAvatarBase } from "@multica/ui/components/common/actor-avatar";
+import { ActorAvatar as ActorAvatarBase } from "@atb/ui/components/common/actor-avatar";
 import {
   HoverCard,
   HoverCardTrigger,
   HoverCardContent,
-} from "@multica/ui/components/ui/hover-card";
-import { useActorName } from "@multica/core/workspace/hooks";
-import { useAgentPresenceDetail } from "@multica/core/agents";
-import { useCurrentWorkspace, useWorkspacePaths } from "@multica/core/paths";
+} from "@atb/ui/components/ui/hover-card";
+import { useActorName } from "@atb/core/workspace/hooks";
+import { useAgentPresenceDetail } from "@atb/core/agents";
+import { useCurrentWorkspace, useWorkspacePaths } from "@atb/core/paths";
 import { AgentProfileCard } from "../agents/components/agent-profile-card";
 import { AgentLivePeekCard } from "../agents/components/agent-live-peek-card";
 import { MemberProfileCard } from "../members/member-profile-card";

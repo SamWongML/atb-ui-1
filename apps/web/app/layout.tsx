@@ -2,21 +2,19 @@ import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import { Inter, Geist_Mono, Source_Serif_4 } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@multica/ui/components/ui/sonner";
-import { cn } from "@multica/ui/lib/utils";
+import { Toaster } from "@atb/ui/components/ui/sonner";
+import { cn } from "@atb/ui/lib/utils";
 import { WebProviders } from "@/components/web-providers";
 import {
   DEFAULT_LOCALE,
   SUPPORTED_LOCALES,
   type SupportedLocale,
-} from "@multica/core/i18n";
-import { RESOURCES } from "@multica/views/locales";
+} from "@atb/core/i18n";
+import { RESOURCES } from "@atb/views/locales";
 import "./globals.css";
 
 // Font stack: Inter for Latin UI text + system Chinese fonts for zh content.
-// Desktop app uses the same stack via apps/desktop/src/renderer/src/globals.css —
-// keep the CJK fallback tail in sync across both files. The Inter primary family
-// differs by design: next/font produces `__Inter_xxx` (with a synthetic size-adjusted
+// The Inter primary family uses next/font, which produces `__Inter_xxx` (with a synthetic size-adjusted
 // fallback face to prevent FOUT layout shift); desktop uses fontsource's "Inter Variable".
 // Both resolve to Inter glyphs, so rendering is identical in practice.
 // Currently covers English + Simplified Chinese. When ja/ko i18n lands, extend
@@ -73,10 +71,10 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.multica.ai"),
+  metadataBase: new URL("https://www.auto-tobe.ai"),
   title: {
-    default: "Multica — Project Management for Human + Agent Teams",
-    template: "%s | Multica",
+    default: "auto-tobe — Project Management for Human + Agent Teams",
+    template: "%s | auto-tobe",
   },
   description:
     "Open-source platform that turns coding agents into real teammates. Assign tasks, track progress, compound skills.",
@@ -86,13 +84,13 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    siteName: "Multica",
+    siteName: "auto-tobe",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    site: "@multica_hq",
-    creator: "@multica_hq",
+    site: "@atb_hq",
+    creator: "@atb_hq",
   },
   alternates: {
     canonical: "/",
@@ -122,7 +120,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const h = await headers();
-  const headerLocale = h.get("x-multica-locale");
+  const headerLocale = h.get("x-atb-locale");
   const locale: SupportedLocale = isSupportedLocale(headerLocale)
     ? headerLocale
     : DEFAULT_LOCALE;
