@@ -11,7 +11,7 @@ export const runtimeModelsKeys = {
 const POLL_INTERVAL_MS = 500;
 const POLL_TIMEOUT_MS = 30_000;
 
-// SEAM (cloud re-model pending — see wayfinder map): resolveRuntimeModels
+// SEAM (cloud re-model pending — see INTEGRATION.md § Deferred): resolveRuntimeModels
 // initiates a list-models request against the runtime and polls until it
 // reports back or the request times out. The initiate/poll transport was
 // shaped by the local daemon's heartbeat piggyback; the cloud runner will

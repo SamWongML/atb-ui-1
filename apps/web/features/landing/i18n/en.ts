@@ -95,12 +95,12 @@ export function createEnDict(allowSignup: boolean): LandingDict {
       label: "RUNTIMES",
       title: "One dashboard for all your compute",
       description:
-        "Local daemons and cloud runtimes, managed from a single panel. Real-time monitoring of online/offline status, usage charts, and activity heatmaps. Auto-detects 11 supported coding tools on your machine.",
+        "Cloud runtimes managed from a single panel. Real-time monitoring of online/offline status, usage charts, and activity heatmaps across 11 supported coding tools.",
       cards: [
         {
           title: "Unified runtime panel",
           description:
-            "Local daemons and cloud runtimes in one view. No context switching between different management interfaces.",
+            "All your cloud runtimes in one view. No context switching between different management interfaces.",
         },
         {
           title: "Real-time monitoring",
@@ -128,9 +128,9 @@ export function createEnDict(allowSignup: boolean): LandingDict {
           : "Enter your email, verify with a code, and you\u2019re logged into your workspace \u2014 no setup wizard, no configuration forms.",
       },
       {
-        title: "Install the CLI & connect your machine",
+        title: "Connect a runtime",
         description:
-          "Run auto-tobe setup \u2014 it walks you through OAuth, starts the daemon, and scans for the 11 supported coding tools (Claude Code, Codex, Cursor, Copilot, Gemini, Hermes, Kimi, Kiro CLI, OpenCode, OpenClaw, Pi). Whichever ones you already have installed get registered as runtimes automatically.",
+          "auto-tobe runs your agents on cloud runtimes across the 11 supported coding tools (Claude Code, Codex, Cursor, Copilot, Gemini, Hermes, Kimi, Kiro CLI, OpenCode, OpenClaw, Pi) \u2014 pick one and you\u2019re ready to create an agent.",
       },
       {
         title: "Create your first agent",
@@ -186,7 +186,7 @@ export function createEnDict(allowSignup: boolean): LandingDict {
       {
         question: "What coding agents does auto-tobe support?",
         answer:
-          "auto-tobe supports 11 coding tools out of the box: Claude Code, Codex, Cursor, Copilot, Gemini, Hermes, Kimi, Kiro CLI, OpenCode, OpenClaw, and Pi. The daemon auto-detects whichever CLIs you already have installed and registers a runtime for each one. Since it's open source, you can also add your own backends.",
+          "auto-tobe supports 11 coding tools out of the box: Claude Code, Codex, Cursor, Copilot, Gemini, Hermes, Kimi, Kiro CLI, OpenCode, OpenClaw, and Pi. A runtime is registered for each tool it can run. Since it's open source, you can also add your own backends.",
       },
       {
         question: "Do I need to self-host, or is there a cloud version?",
@@ -207,7 +207,7 @@ export function createEnDict(allowSignup: boolean): LandingDict {
       {
         question: "Is my code safe? Where does agent execution happen?",
         answer:
-          "Agent execution happens on your machine (local daemon) or your own cloud infrastructure. Code never passes through auto-tobe servers. The platform only coordinates task state and broadcasts events.",
+          "Agent execution happens on your runtimes, not through auto-tobe’s coordination layer. The platform only coordinates task state and broadcasts events.",
       },
       {
         question: "How many agents can I run?",
@@ -233,7 +233,6 @@ export function createEnDict(allowSignup: boolean): LandingDict {
       resources: {
         label: "Resources",
         links: [
-          { label: "Documentation", href: "/docs" },
           { label: "API", href: githubUrl },
           { label: "X (Twitter)", href: "https://x.com/AutoTobe" },
         ],

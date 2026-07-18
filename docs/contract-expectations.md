@@ -262,6 +262,8 @@ per-domain reconciliation work, not this catalog.
 |---|---|---|---|---|
 | `uploadFile` | POST | `/api/upload-file` | `multipart/form-data` (`file` + `issue_id?`/`comment_id?`/`chat_session_id?`) | `Attachment` |
 | `listAttachments` | GET | `/api/issues/:issueId/attachments` | — | `Attachment[]` |
+| `getAttachment` | GET | `/api/attachments/:id` | — | `Attachment` |
+| `getAttachmentTextContent` | GET | `/api/attachments/:id/content` | — | `{ text, originalContentType }` (throws dedicated errors when the server refuses to inline) |
 | `deleteAttachment` | DELETE | `/api/attachments/:id` | — | `void` |
 
 > Uploaded file URLs are same-origin `/uploads/*` today (rendered as `<img src="/uploads/…">`).
@@ -272,6 +274,7 @@ per-domain reconciliation work, not this catalog.
 | Method | Verb | Path | Response |
 |---|---|---|---|
 | `listProjects` / `getProject` | GET | `/api/projects[/:id]` | `ListProjectsResponse` / `Project` |
+| `searchProjects` | GET | `/api/projects/search` | `SearchProjectsResponse` |
 | `createProject` / `updateProject` / `deleteProject` | POST/PUT/DELETE | `/api/projects[/:id]` | `Project` / `void` |
 | `listProjectResources` | GET | `/api/projects/:projectId/resources` | `ListProjectResourcesResponse` |
 | `createProjectResource` / `deleteProjectResource` | POST/DELETE | `/api/projects/:projectId/resources[/:resourceId]` | `ProjectResource` / `void` |

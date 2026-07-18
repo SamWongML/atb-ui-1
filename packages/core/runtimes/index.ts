@@ -3,7 +3,7 @@
 // stripped during the frontend extraction; what remains — the runtime
 // list/usage queries, health derivation, model discovery, mutations, and
 // custom pricing — is transport-agnostic and re-models onto cloud runners
-// later (see the wayfinder map). Keep this binding intact.
+// later (see INTEGRATION.md § Deferred). Keep this binding intact.
 export * from "./queries";
 export * from "./mutations";
 export * from "./models";

@@ -46,7 +46,7 @@ function mergeQuestionnaire(
  *   doesn't carry `firstIssueId` any more — there is no welcome issue
  *   created by onboarding.
  *
- * SEAM (cloud re-model pending — see wayfinder map): the "connect a
+ * SEAM (cloud re-model pending — see INTEGRATION.md § Deferred): the "connect a
  * runtime / install the CLI" step and the runtime-bound "create an agent"
  * step were removed with the local-runtime surfaces. The flow now runs
  * welcome → questionnaire → workspace → first_issue; onboarding-time agent

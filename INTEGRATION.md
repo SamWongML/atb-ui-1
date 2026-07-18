@@ -109,6 +109,12 @@ These are **not** done here and return only as fresh efforts:
   event names are backend-contract strings kept as-is behind a seam.
 - **Upload URL resolution** — attachment URLs are same-origin `/uploads/*` today;
   resolving them against the api origin / CDN is part of reconciliation.
+- **E2E login harness** — `e2e/fixtures.ts` (`TestApiClient`) still reads the
+  one-time verification code straight from the DB via a raw `pg` client
+  (`DATABASE_URL`, table `verification_code`) — a leftover coupling to the
+  removed `server/` migrations' schema. Running the E2E suite needs
+  `DATABASE_URL` pointed at the api's database; migrating the login harness to
+  an api-based flow is part of reconciliation.
 - **Cloud runtime re-model** — the local-runtime UI was stripped; the abstract
   `agent.runtime` binding + runtime queries/types are kept behind documented
   seam markers (`packages/core/runtimes/`) and re-model onto cloud runners later.
