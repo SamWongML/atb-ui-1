@@ -6,7 +6,6 @@ import { resolve } from "path";
 config({ path: resolve(__dirname, "../../.env") });
 
 const remoteApiUrl = process.env.REMOTE_API_URL || "http://localhost:8080";
-const docsUrl = process.env.DOCS_URL || "http://localhost:4000";
 
 // Parse hostnames from CORS_ALLOWED_ORIGINS so that Next.js dev server
 // allows cross-origin HMR / webpack requests (e.g. from Tailscale IPs).
@@ -34,18 +33,6 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return {
-      // Run before file-system routes so /docs isn't shadowed by the
-      // [workspaceSlug] dynamic segment.
-      beforeFiles: [
-        {
-          source: "/docs",
-          destination: `${docsUrl}/docs`,
-        },
-        {
-          source: "/docs/:path*",
-          destination: `${docsUrl}/docs/:path*`,
-        },
-      ],
       afterFiles: [
         {
           source: "/api/:path*",
