@@ -11,12 +11,15 @@ export const runtimeModelsKeys = {
 const POLL_INTERVAL_MS = 500;
 const POLL_TIMEOUT_MS = 30_000;
 
-// resolveRuntimeModels initiates a list-models request against the daemon
-// (via heartbeat piggyback) and polls until the daemon reports back or
-// the request times out. Returns both the models list and a
-// `supported` flag: `supported=false` means the provider ignores
-// per-agent model selection entirely (hermes today) — the UI uses
-// this to disable its dropdown instead of accepting a value that
+// SEAM (cloud re-model pending — see wayfinder map): resolveRuntimeModels
+// initiates a list-models request against the runtime and polls until it
+// reports back or the request times out. The initiate/poll transport was
+// shaped by the local daemon's heartbeat piggyback; the cloud runner will
+// report models over the gateway instead, but the "a runtime enumerates
+// the models it can run" contract this expresses is kept as-is. Returns
+// both the models list and a `supported` flag: `supported=false` means the
+// provider ignores per-agent model selection entirely (hermes today) — the
+// UI uses this to disable its dropdown instead of accepting a value that
 // wouldn't be honoured at runtime.
 export async function resolveRuntimeModels(
   runtimeId: string,

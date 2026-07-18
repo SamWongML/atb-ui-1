@@ -61,7 +61,7 @@ export interface ExtraSettingsTab {
 }
 
 interface SettingsPageProps {
-  /** Additional tabs injected by platform (e.g. desktop daemon settings) */
+  /** Additional account tabs injected by the host platform. */
   extraAccountTabs?: ExtraSettingsTab[];
 }
 

@@ -45,37 +45,8 @@ import { availabilityConfig, workloadConfig } from "../../agents/presence";
 import { formatLastSeen } from "../utils";
 import { HealthBadge } from "./shared";
 import { ProviderLogo } from "./provider-logo";
-import { UpdateSection } from "./update-section";
 import { UsageSection } from "./usage-section";
 import { useT } from "../../i18n";
-
-function getCliVersion(metadata: Record<string, unknown>): string | null {
-  if (
-    metadata &&
-    typeof metadata.cli_version === "string" &&
-    metadata.cli_version
-  ) {
-    return metadata.cli_version;
-  }
-  return null;
-}
-
-function getLaunchedBy(metadata: Record<string, unknown>): string | null {
-  if (
-    metadata &&
-    typeof metadata.launched_by === "string" &&
-    metadata.launched_by
-  ) {
-    return metadata.launched_by;
-  }
-  return null;
-}
-
-function shortDaemonId(id: string | null): string | null {
-  if (!id) return null;
-  if (id.length <= 10) return id;
-  return `${id.slice(0, 6)}··${id.slice(-2)}`;
-}
 
 // 30s tick keeps derived runtime health honest as time-based windows
 // (recently_lost → offline → about_to_gc) cross thresholds without any new
@@ -93,10 +64,6 @@ function useNowTick(intervalMs = 30_000): number {
 
 export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
   const { t } = useT("runtimes");
-  const cliVersion =
-    runtime.runtime_mode === "local" ? getCliVersion(runtime.metadata) : null;
-  const launchedBy =
-    runtime.runtime_mode === "local" ? getLaunchedBy(runtime.metadata) : null;
 
   const user = useAuthStore((s) => s.user);
   const wsId = useWorkspaceId();
@@ -139,7 +106,6 @@ export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
     });
   };
 
-  const daemonShort = shortDaemonId(runtime.daemon_id);
   const lastSeen = formatLastSeen(runtime.last_seen_at);
 
   return (
@@ -201,8 +167,6 @@ export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
               health={health}
               lastSeen={lastSeen}
               ownerMember={ownerMember}
-              cliVersion={cliVersion}
-              daemonShort={daemonShort}
             />
             <UsageSection runtimeId={runtime.id} />
           </div>
@@ -216,8 +180,6 @@ export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
             />
             <DiagnosticsCard
               runtime={runtime}
-              cliVersion={cliVersion}
-              launchedBy={launchedBy}
               canDelete={!!canDelete}
               onDelete={() => setDeleteOpen(true)}
             />
@@ -269,20 +231,14 @@ function HeroCard({
   health,
   lastSeen,
   ownerMember,
-  cliVersion,
-  daemonShort,
 }: {
   runtime: AgentRuntime;
   health: ReturnType<typeof deriveRuntimeHealth>;
   lastSeen: string;
   ownerMember: MemberWithUser | null;
-  cliVersion: string | null;
-  daemonShort: string | null;
 }) {
   const { t } = useT("runtimes");
-  const [showDetails, setShowDetails] = useState(false);
   const device = runtime.device_info ? parseDeviceInfo(runtime.device_info) : null;
-  const hasTechDetails = !!cliVersion || !!daemonShort;
 
   return (
     <div className="rounded-lg border bg-card">
@@ -347,40 +303,6 @@ function HeroCard({
           </span>
         </Fact>
       </dl>
-
-      {/* Diagnostic IDs — multica CLI git hash + truncated daemon UUID.
-          Only useful when filing an issue or reading logs; folded by
-          default so they don't compete with the user-visible facts above. */}
-      {hasTechDetails && (
-        <div className="border-t">
-          <button
-            type="button"
-            onClick={() => setShowDetails((v) => !v)}
-            className="flex w-full items-center gap-1 px-4 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ChevronRight
-              className={`h-3 w-3 transition-transform ${
-                showDetails ? "rotate-90" : ""
-              }`}
-            />
-            {t(($) => $.detail.technical_details)}
-          </button>
-          {showDetails && (
-            <dl className="grid grid-cols-1 gap-y-2 border-t bg-muted/30 px-4 py-3 sm:grid-cols-2">
-              {cliVersion && (
-                <Fact label="Daemon CLI" mono compact>
-                  {cliVersion}
-                </Fact>
-              )}
-              {daemonShort && (
-                <Fact label="Daemon ID" mono compact>
-                  {daemonShort}
-                </Fact>
-              )}
-            </dl>
-          )}
-        </div>
-      )}
     </div>
   );
 }
@@ -488,19 +410,14 @@ function ServingAgentsCard({
 
 function DiagnosticsCard({
   runtime,
-  cliVersion,
-  launchedBy,
   canDelete,
   onDelete,
 }: {
   runtime: AgentRuntime;
-  cliVersion: string | null;
-  launchedBy: string | null;
   canDelete: boolean;
   onDelete: () => void;
 }) {
   const { t } = useT("runtimes");
-  const isLocal = runtime.runtime_mode === "local";
   // canDelete here doubles as the "can edit runtime" predicate — it already
   // means "workspace owner/admin OR runtime owner", which is the same gate
   // the server enforces for the visibility PATCH.
@@ -530,19 +447,6 @@ function DiagnosticsCard({
             <TimezoneReadout runtime={runtime} />
           )}
         </div>
-        {isLocal && (
-          <div className="border-t pt-3">
-            <div className="mb-1.5 text-[11px] uppercase tracking-wide text-muted-foreground">
-              {t(($) => $.detail.diagnostics_cli)}
-            </div>
-            <UpdateSection
-              runtimeId={runtime.id}
-              currentVersion={cliVersion}
-              isOnline={runtime.status === "online"}
-              launchedBy={launchedBy}
-            />
-          </div>
-        )}
         {canDelete && (
           <div className="border-t pt-3">
             <Button

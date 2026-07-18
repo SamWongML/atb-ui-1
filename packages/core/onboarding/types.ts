@@ -1,9 +1,12 @@
+// The "runtime" (connect a local runtime / install the CLI) and "agent"
+// (create an agent bound to that runtime) steps were removed with the
+// local-runtime surfaces during the frontend extraction. Onboarding now
+// runs welcome → questionnaire → workspace → first_issue; agent creation
+// re-enters onboarding once cloud runtimes are modeled (see wayfinder map).
 export type OnboardingStep =
   | "welcome"
   | "questionnaire"
   | "workspace"
-  | "runtime"
-  | "agent"
   | "first_issue";
 
 /**
