@@ -32,7 +32,7 @@ const WSContext = createContext<WSContextValue | null>(null);
 
 export interface WSProviderProps {
   children: ReactNode;
-  /** WebSocket server URL (e.g. "ws://localhost:8080/ws") */
+  /** Gateway WebSocket URL (e.g. "wss://gateway.example/ws"). */
   wsUrl: string;
   /** Platform-created auth store instance */
   authStore: UseBoundStore<StoreApi<AuthState>>;
@@ -78,6 +78,10 @@ export function WSProvider({
 
   useEffect(() => {
     if (!user || !wsSlug) return;
+    // No gateway URL configured → skip connecting rather than throwing on
+    // `new URL("")`. The realtime feed stays dormant until the host app
+    // supplies a gateway WS origin (see NEXT_PUBLIC_ATB_GATEWAY_WS_URL).
+    if (!wsUrl) return;
 
     // In token mode we need a token from storage; in cookie mode the HttpOnly
     // cookie is sent automatically with the WS upgrade request.

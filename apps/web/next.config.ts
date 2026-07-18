@@ -1,13 +1,11 @@
 import type { NextConfig } from "next";
-import { config } from "dotenv";
-import { resolve } from "path";
 
-// Load root .env so REMOTE_API_URL is available to next.config.ts
-config({ path: resolve(__dirname, "../../.env") });
+// The web app talks to the auto-tobe `api` and `gateway` directly via the
+// absolute origins in NEXT_PUBLIC_ATB_API_URL / NEXT_PUBLIC_ATB_GATEWAY_WS_URL
+// (passed into CoreProvider). There is no same-origin backend proxy — the
+// destination `api` owns CORS for the web origin.
 
-const remoteApiUrl = process.env.REMOTE_API_URL || "http://localhost:8080";
-
-// Parse hostnames from CORS_ALLOWED_ORIGINS so that Next.js dev server
+// Parse hostnames from CORS_ALLOWED_ORIGINS so that the Next.js dev server
 // allows cross-origin HMR / webpack requests (e.g. from Tailscale IPs).
 const allowedDevOrigins = process.env.CORS_ALLOWED_ORIGINS
   ? process.env.CORS_ALLOWED_ORIGINS.split(",")
@@ -30,29 +28,6 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 80, 85],
-  },
-  async rewrites() {
-    return {
-      afterFiles: [
-        {
-          source: "/api/:path*",
-          destination: `${remoteApiUrl}/api/:path*`,
-        },
-        {
-          source: "/ws",
-          destination: `${remoteApiUrl}/ws`,
-        },
-        {
-          source: "/auth/:path*",
-          destination: `${remoteApiUrl}/auth/:path*`,
-        },
-        {
-          source: "/uploads/:path*",
-          destination: `${remoteApiUrl}/uploads/:path*`,
-        },
-      ],
-      fallback: [],
-    };
   },
 };
 

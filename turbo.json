@@ -3,8 +3,11 @@
   "globalEnv": [
     "FRONTEND_PORT",
     "FRONTEND_ORIGIN",
-    "NEXT_PUBLIC_API_URL",
-    "NEXT_PUBLIC_WS_URL"
+    "NEXT_PUBLIC_ATB_API_URL",
+    "NEXT_PUBLIC_ATB_GATEWAY_WS_URL",
+    "NEXT_PUBLIC_APP_VERSION",
+    "CORS_ALLOWED_ORIGINS",
+    "STANDALONE"
   ],
   "tasks": {
     "build": {

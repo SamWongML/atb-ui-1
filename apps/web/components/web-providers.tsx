@@ -27,16 +27,6 @@ function hasLegacyToken(): boolean {
   }
 }
 
-// Derive WebSocket URL from the page origin so self-hosted / LAN deployments
-// work without explicit NEXT_PUBLIC_WS_URL.  The Next.js rewrite rule
-// (/ws → backend) handles proxying.
-function deriveWsUrl(): string | undefined {
-  if (process.env.NEXT_PUBLIC_WS_URL) return process.env.NEXT_PUBLIC_WS_URL;
-  if (typeof window === "undefined") return undefined;
-  const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
-  return `${proto}//${window.location.host}/ws`;
-}
-
 // Build-time version preferred (CI sets NEXT_PUBLIC_APP_VERSION to a git tag
 // or sha so different deploys are distinguishable in server logs); fall back
 // to the package.json version so local dev still reports something useful.
@@ -62,8 +52,8 @@ export function WebProviders({
   const localeAdapter = useMemo(() => createBrowserCookieLocaleAdapter(), []);
   return (
     <CoreProvider
-      apiBaseUrl={process.env.NEXT_PUBLIC_API_URL}
-      wsUrl={deriveWsUrl()}
+      apiBaseUrl={process.env.NEXT_PUBLIC_ATB_API_URL}
+      wsUrl={process.env.NEXT_PUBLIC_ATB_GATEWAY_WS_URL}
       cookieAuth={cookieAuth}
       onLogin={setLoggedInCookie}
       onLogout={clearLoggedInCookie}
