@@ -94,6 +94,34 @@ export function validateCliCallback(cliCallback: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
+// Calm entry frame
+// ---------------------------------------------------------------------------
+
+// Ambient backdrop for the calm login. Two faint glows derived from the theme
+// tokens via color-mix (no hardcoded colors) so it adapts to light/dark.
+const AUTH_BACKDROP =
+  "radial-gradient(90% 70% at 85% 15%, color-mix(in oklch, var(--primary) 12%, transparent), transparent 55%)," +
+  "radial-gradient(80% 70% at 10% 90%, color-mix(in oklch, var(--ring) 16%, transparent), transparent 55%)";
+
+/**
+ * Full-screen calm entry frame: centers the auth card over a soft ambient
+ * gradient. Shared by every step (email / code / CLI confirm) so the entry
+ * stays consistent as the user moves through it.
+ */
+function AuthScreen({ children }: { children: ReactNode }) {
+  return (
+    <div className="relative flex min-h-svh items-center justify-center bg-background p-4">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{ background: AUTH_BACKDROP }}
+      />
+      {children}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
@@ -292,8 +320,8 @@ export function LoginPage({
 
   if (step === "cli_confirm" && existingUser) {
     return (
-      <div className="flex min-h-svh items-center justify-center">
-        <Card className="w-full max-w-sm">
+      <AuthScreen>
+        <Card className="relative z-10 w-full max-w-sm bg-card/85 shadow-xl backdrop-blur-xl">
           <CardHeader className="text-center">
             {logo && <div className="mx-auto mb-4">{logo}</div>}
             <CardTitle className="text-2xl">
@@ -326,7 +354,7 @@ export function LoginPage({
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </AuthScreen>
     );
   }
 
@@ -336,8 +364,8 @@ export function LoginPage({
 
   if (step === "code") {
     return (
-      <div className="flex min-h-svh items-center justify-center">
-        <Card className="w-full max-w-sm">
+      <AuthScreen>
+        <Card className="relative z-10 w-full max-w-sm bg-card/85 shadow-xl backdrop-blur-xl">
           <CardHeader className="text-center">
             {logo && <div className="mx-auto mb-4">{logo}</div>}
             <CardTitle className="text-2xl">
@@ -397,7 +425,7 @@ export function LoginPage({
             </Button>
           </CardFooter>
         </Card>
-      </div>
+      </AuthScreen>
     );
   }
 
@@ -406,8 +434,8 @@ export function LoginPage({
   // -------------------------------------------------------------------------
 
   return (
-    <div className="flex min-h-svh items-center justify-center">
-      <Card className="w-full max-w-sm">
+    <AuthScreen>
+      <Card className="relative z-10 w-full max-w-sm bg-card/85 shadow-xl backdrop-blur-xl">
         <CardHeader className="text-center">
           {logo && <div className="mx-auto mb-4">{logo}</div>}
           <CardTitle className="text-2xl">
@@ -493,6 +521,6 @@ export function LoginPage({
           {extra && <div className="w-full pt-1 text-center">{extra}</div>}
         </CardFooter>
       </Card>
-    </div>
+    </AuthScreen>
   );
 }
