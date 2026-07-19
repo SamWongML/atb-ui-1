@@ -20,77 +20,12 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-// These tests cover the five failure modes that white-screened the desktop
-// app in past incidents. The contract is: a malformed response degrades to
-// an empty/safe shape, never throws into React.
+// These tests cover the malformed-response failure modes that white-screened
+// the desktop app in past incidents, for ops still living inline on
+// ApiClient. Issue-domain cases (listIssues, listChildIssues, listTimeline)
+// moved to issues/contract.test.ts with their contract module; the rest
+// migrate domain-by-domain as contract modules fold in.
 describe("ApiClient schema fallback", () => {
-  describe("listTimeline", () => {
-    it("falls back to an empty array when the body is null", async () => {
-      stubFetchJson(null);
-      const client = new ApiClient("https://api.example.test");
-      const entries = await client.listTimeline("issue-1");
-      expect(entries).toEqual([]);
-    });
-
-    it("falls back when the body is not an array", async () => {
-      stubFetchJson({ wrong: "shape" });
-      const client = new ApiClient("https://api.example.test");
-      const entries = await client.listTimeline("issue-1");
-      expect(entries).toEqual([]);
-    });
-
-    it("accepts a new entry type rather than crashing on enum drift", async () => {
-      stubFetchJson([
-        {
-          type: "future_kind", // not in TS union
-          id: "e-1",
-          actor_type: "member",
-          actor_id: "u-1",
-          created_at: "2026-01-01T00:00:00Z",
-        },
-      ]);
-      const client = new ApiClient("https://api.example.test");
-      const entries = await client.listTimeline("issue-1");
-      expect(entries).toHaveLength(1);
-      expect(entries[0]?.type).toBe("future_kind");
-    });
-
-    // Forward-compat: when the server adds a new field to an existing
-    // shape, `.loose()` lets it pass through unchanged. Without `.loose()`
-    // zod 4 strips it, which would silently break a future TS type that
-    // adopts the field — see schemas.ts header comment.
-    it("preserves unknown fields the schema didn't list", async () => {
-      stubFetchJson([
-        {
-          type: "comment",
-          id: "e-1",
-          actor_type: "member",
-          actor_id: "u-1",
-          created_at: "2026-01-01T00:00:00Z",
-          // New server-side field not present in TimelineEntrySchema:
-          future_field: { nested: "value" },
-        },
-      ]);
-      const client = new ApiClient("https://api.example.test");
-      const entries = await client.listTimeline("issue-1");
-      const entry = entries[0] as unknown as Record<string, unknown>;
-      expect(entry.future_field).toEqual({ nested: "value" });
-    });
-  });
-
-  describe("listIssues", () => {
-    it("falls back to an empty list when the response is malformed", async () => {
-      // `issues` having the wrong type triggers the fallback. An object
-      // with only unexpected keys would *succeed* parsing now (every
-      // declared field has a default) and just pass the extras through
-      // via `.loose()`, so we use a wrong-type payload here instead.
-      stubFetchJson({ issues: "not-an-array", total: 0 });
-      const client = new ApiClient("https://api.example.test");
-      const res = await client.listIssues();
-      expect(res).toEqual({ issues: [], total: 0 });
-    });
-  });
-
   describe("listComments", () => {
     it("returns [] when the response is not an array", async () => {
       stubFetchJson({ wrong: "shape" });
@@ -106,15 +41,6 @@ describe("ApiClient schema fallback", () => {
       const client = new ApiClient("https://api.example.test");
       const subs = await client.listIssueSubscribers("issue-1");
       expect(subs).toEqual([]);
-    });
-  });
-
-  describe("listChildIssues", () => {
-    it("returns { issues: [] } when the issues field is missing", async () => {
-      stubFetchJson({});
-      const client = new ApiClient("https://api.example.test");
-      const res = await client.listChildIssues("issue-1");
-      expect(res).toEqual({ issues: [] });
     });
   });
 

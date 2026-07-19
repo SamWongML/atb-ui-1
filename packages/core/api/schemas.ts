@@ -5,14 +5,15 @@ import type {
   AgentTemplateSummary,
   Attachment,
   CreateAgentFromTemplateResponse,
-  ListIssuesResponse,
-  TimelineEntry,
 } from "../types";
 
 // ---------------------------------------------------------------------------
 // Schemas for the highest-risk API endpoints — those whose responses drive
-// the issue detail page (timeline, comments, subscribers) and the issues
-// list. These are the surfaces that white-screened in #2143 / #2147 / #2192.
+// the issue detail page (comments, subscribers) and the agent-template
+// picker. These are the surfaces that white-screened in #2143 / #2147 /
+// #2192. Issue-owned schemas (issue list, children, timeline) live in the
+// Issue domain's contract module (../issues/contract.ts); the rest migrate
+// domain-by-domain as contract modules fold in.
 //
 // These schemas are intentionally LENIENT:
 //   - String enums are stored as `z.string()` rather than `z.enum([...])`.
@@ -37,7 +38,10 @@ import type {
 // type still flows out at the call site; the schema only guards shape.
 // ---------------------------------------------------------------------------
 
-const ReactionSchema = z.object({
+// Exported because the issues contract module's timeline schema embeds
+// reactions/attachments. Ownership moves to the comments / attachments
+// contract modules when those domains fold in the sweep.
+export const ReactionSchema = z.object({
   id: z.string(),
   comment_id: z.string(),
   actor_type: z.string(),
@@ -49,7 +53,7 @@ const ReactionSchema = z.object({
 // Nested attachments embedded in timeline/comment responses stay lenient on
 // purpose: a single malformed attachment must not knock the whole timeline
 // into the fallback `[]`.
-const AttachmentSchema = z.object({
+export const AttachmentSchema = z.object({
   id: z.string(),
 }).loose();
 
@@ -84,37 +88,6 @@ export const EMPTY_ATTACHMENT: Attachment = {
   created_at: "",
 };
 
-// All object schemas use `.loose()` so unknown server-side fields pass
-// through unchanged. zod 4's `.object()` defaults to STRIP, which would
-// silently drop new fields and surface as a "field neither showed up in
-// the UI" mystery the next time the TS type adopted them but the schema
-// wasn't updated in lock-step. `.loose()` removes that synchronisation
-// hazard — the schema validates the shape it knows about and leaves the
-// rest alone.
-const TimelineEntrySchema = z.object({
-  type: z.string(),
-  id: z.string(),
-  actor_type: z.string(),
-  actor_id: z.string(),
-  created_at: z.string(),
-  action: z.string().optional(),
-  details: z.record(z.string(), z.unknown()).optional(),
-  content: z.string().optional(),
-  parent_id: z.string().nullable().optional(),
-  updated_at: z.string().optional(),
-  comment_type: z.string().optional(),
-  reactions: z.array(ReactionSchema).optional(),
-  attachments: z.array(AttachmentSchema).optional(),
-  coalesced_count: z.number().optional(),
-}).loose();
-
-// /timeline returns a flat array of TimelineEntry, oldest first. The
-// previously cursor-paginated wrapper was removed (#1929) — at observed data
-// sizes (p99 ~30 entries per issue) paged delivery only created bugs.
-export const TimelineEntriesSchema = z.array(TimelineEntrySchema);
-
-export const EMPTY_TIMELINE_ENTRIES: TimelineEntry[] = [];
-
 export const CommentSchema = z.object({
   id: z.string(),
   issue_id: z.string(),
@@ -131,39 +104,6 @@ export const CommentSchema = z.object({
 
 export const CommentsListSchema = z.array(CommentSchema);
 
-const IssueSchema = z.object({
-  id: z.string(),
-  workspace_id: z.string(),
-  number: z.number(),
-  identifier: z.string(),
-  title: z.string(),
-  description: z.string().nullable(),
-  status: z.string(),
-  priority: z.string(),
-  assignee_type: z.string().nullable(),
-  assignee_id: z.string().nullable(),
-  creator_type: z.string(),
-  creator_id: z.string(),
-  parent_issue_id: z.string().nullable(),
-  project_id: z.string().nullable(),
-  position: z.number(),
-  due_date: z.string().nullable(),
-  reactions: z.array(z.unknown()).optional(),
-  labels: z.array(z.unknown()).optional(),
-  created_at: z.string(),
-  updated_at: z.string(),
-}).loose();
-
-export const ListIssuesResponseSchema = z.object({
-  issues: z.array(IssueSchema).default([]),
-  total: z.number().default(0),
-}).loose();
-
-export const EMPTY_LIST_ISSUES_RESPONSE: ListIssuesResponse = {
-  issues: [],
-  total: 0,
-};
-
 const SubscriberSchema = z.object({
   issue_id: z.string(),
   user_type: z.string(),
@@ -173,10 +113,6 @@ const SubscriberSchema = z.object({
 }).loose();
 
 export const SubscribersListSchema = z.array(SubscriberSchema);
-
-export const ChildIssuesResponseSchema = z.object({
-  issues: z.array(IssueSchema).default([]),
-}).loose();
 
 // ---------------------------------------------------------------------------
 // Workspace dashboard schemas

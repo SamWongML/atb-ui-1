@@ -1,81 +1,18 @@
-import type { Issue, IssueStatus, IssuePriority, IssueAssigneeType } from "./issue";
 import type { MemberRole } from "./workspace";
 import type { Project } from "./project";
 
-// Issue API
-export interface CreateIssueRequest {
-  title: string;
-  description?: string;
-  status?: IssueStatus;
-  priority?: IssuePriority;
-  assignee_type?: IssueAssigneeType;
-  assignee_id?: string;
-  parent_issue_id?: string;
-  project_id?: string;
-  due_date?: string;
-  attachment_ids?: string[];
-}
-
-export interface UpdateIssueRequest {
-  title?: string;
-  description?: string;
-  status?: IssueStatus;
-  priority?: IssuePriority;
-  assignee_type?: IssueAssigneeType | null;
-  assignee_id?: string | null;
-  position?: number;
-  due_date?: string | null;
-  parent_issue_id?: string | null;
-  project_id?: string | null;
-  /** Attachment IDs to bind to this issue alongside the description update.
-   *  Used by the description editor to register newly uploaded files so they
-   *  surface in `issueAttachments` and keep their preview Eye on refresh. */
-  attachment_ids?: string[];
-}
-
-export interface ListIssuesParams {
-  limit?: number;
-  offset?: number;
-  workspace_id?: string;
-  status?: IssueStatus;
-  priority?: IssuePriority;
-  assignee_id?: string;
-  assignee_ids?: string[];
-  creator_id?: string;
-  project_id?: string;
-  open_only?: boolean;
-}
-
-/** Raw backend response shape for `GET /api/issues`. */
-export interface ListIssuesResponse {
-  issues: Issue[];
-  total: number;
-}
-
-/** Per-status bucket in the paginated issue cache. `total` is the server count (all pages), not the length of `issues`. */
-export interface IssueStatusBucket {
-  issues: Issue[];
-  total: number;
-}
-
-/**
- * Frontend cache shape for the issue list. Data is bucketed by status so
- * each column can paginate independently. Assembled from per-status
- * `api.listIssues` responses by the query functions in `issues/queries.ts`.
- */
-export interface ListIssuesCache {
-  byStatus: Partial<Record<IssueStatus, IssueStatusBucket>>;
-}
-
-export interface SearchIssueResult extends Issue {
-  match_source: "title" | "description" | "comment";
-  matched_snippet?: string;
-}
-
-export interface SearchIssuesResponse {
-  issues: SearchIssueResult[];
-  total: number;
-}
+// Issue request/response/cache types live in the Issue domain's contract
+// module; re-exported here so the `@atb/core/types` barrel stays stable.
+export type {
+  CreateIssueRequest,
+  UpdateIssueRequest,
+  ListIssuesParams,
+  ListIssuesResponse,
+  IssueStatusBucket,
+  ListIssuesCache,
+  SearchIssueResult,
+  SearchIssuesResponse,
+} from "../issues/contract";
 
 export interface SearchProjectResult extends Project {
   match_source: "title" | "description";
