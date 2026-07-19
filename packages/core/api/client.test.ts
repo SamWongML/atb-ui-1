@@ -127,6 +127,24 @@ describe("ApiClient", () => {
     expect(headers["X-Client-OS"]).toBe("macos");
   });
 
+  it("composes the issues contract onto the instance (flat api surface)", async () => {
+    // Guards the Object.assign + interface-merge wiring: listTimeline is
+    // declared by the issues contract module, not the class body, and must
+    // still be callable on a constructed client through the real transport.
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(JSON.stringify(null), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
+      ),
+    );
+    const client = new ApiClient("https://api.example.test");
+    const entries = await client.listTimeline("issue-1");
+    expect(entries).toEqual([]);
+  });
+
   it("omits X-Client-* headers when identity is not configured", async () => {
     const fetchMock = vi.fn().mockResolvedValue(
       new Response(JSON.stringify([]), {

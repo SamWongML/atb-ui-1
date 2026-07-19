@@ -13,6 +13,8 @@ export type {
 } from "./client";
 export { parseWithFallback, setSchemaLogger } from "./schema";
 export type { ParseOptions } from "./schema";
+export { HttpTransport } from "./transport";
+export type { Transport } from "./transport";
 export { WSClient } from "./ws-client";
 
 import type { ApiClient as ApiClientType } from "./client";

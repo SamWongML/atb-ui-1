@@ -1,14 +1,8 @@
 import type {
-  Issue,
-  CreateIssueRequest,
-  UpdateIssueRequest,
-  ListIssuesResponse,
-  SearchIssuesResponse,
   SearchProjectsResponse,
   UpdateMeRequest,
   CreateMemberRequest,
   UpdateMemberRequest,
-  ListIssuesParams,
   Agent,
   CreateAgentRequest,
   AgentTemplate,
@@ -38,7 +32,6 @@ import type {
   CreatePersonalAccessTokenRequest,
   CreatePersonalAccessTokenResponse,
   RuntimeUsage,
-  IssueUsageSummary,
   RuntimeHourlyActivity,
   RuntimeUsageByAgent,
   RuntimeUsageByHour,
@@ -50,8 +43,6 @@ import type {
   RuntimeLocalSkillListRequest,
   CreateRuntimeLocalSkillImportRequest,
   RuntimeLocalSkillImportRequest,
-  TimelineEntry,
-  AssigneeFrequencyEntry,
   TaskMessagePayload,
   Attachment,
   ChatSession,
@@ -95,15 +86,12 @@ import type {
   SquadMember,
 } from "../types";
 import type { OnboardingCompletionPath } from "../onboarding/types";
-import { type Logger, noopLogger } from "../logger";
 import { createRequestId } from "../utils";
-import { getCurrentSlug } from "../platform/workspace-storage";
 import { parseWithFallback } from "./schema";
 import {
   AgentTemplateSchema,
   AgentTemplateSummaryListSchema,
   AttachmentResponseSchema,
-  ChildIssuesResponseSchema,
   CommentsListSchema,
   CreateAgentFromTemplateResponseSchema,
   DashboardAgentRunTimeListSchema,
@@ -113,32 +101,15 @@ import {
   EMPTY_AGENT_TEMPLATE_SUMMARY_LIST,
   EMPTY_ATTACHMENT,
   EMPTY_CREATE_AGENT_FROM_TEMPLATE_RESPONSE,
-  EMPTY_LIST_ISSUES_RESPONSE,
-  EMPTY_TIMELINE_ENTRIES,
-  ListIssuesResponseSchema,
   SubscribersListSchema,
-  TimelineEntriesSchema,
 } from "./schemas";
+import { ApiError, HttpTransport, type ApiClientOptions } from "./transport";
+import { createIssuesContract, type IssuesContract } from "../issues/contract";
 
-/** Identifies the calling client to the server.
- *  Sent on every HTTP request as X-Client-Platform / X-Client-Version /
- *  X-Client-OS so the backend can log, gate, or split metrics by client.
- *  See server/internal/middleware/client.go for the receiving end. */
-export interface ApiClientIdentity {
-  /** Logical client kind. Server expects: "web" | "desktop" | "cli" | "daemon". */
-  platform?: string;
-  /** Client/app version string (e.g. "0.1.0", git tag, commit). */
-  version?: string;
-  /** Operating system the client is running on: "macos" | "windows" | "linux". */
-  os?: string;
-}
-
-export interface ApiClientOptions {
-  logger?: Logger;
-  onUnauthorized?: () => void;
-  /** Identifies the client to the server. Sent as X-Client-* headers. */
-  identity?: ApiClientIdentity;
-}
+// Transport-level surface (headers, auth, error taxonomy) moved behind the
+// transport seam; re-exported here because this path is the public one.
+export { ApiError } from "./transport";
+export type { ApiClientIdentity, ApiClientOptions } from "./transport";
 
 export interface LoginResponse {
   token: string;
@@ -191,23 +162,6 @@ export interface ImportStarterContentResponse {
   welcome_issue_id: string | null;
 }
 
-export class ApiError extends Error {
-  readonly status: number;
-  readonly statusText: string;
-  // Raw decoded JSON body (when the server returned one). Carries structured
-  // error fields like `code` so callers can branch on machine-readable
-  // identifiers instead of pattern-matching the human-readable message.
-  readonly body?: unknown;
-
-  constructor(message: string, status: number, statusText: string, body?: unknown) {
-    super(message);
-    this.name = "ApiError";
-    this.status = status;
-    this.statusText = statusText;
-    this.body = body;
-  }
-}
-
 // Thrown by getAttachmentTextContent when the server refuses to inline a
 // file because it exceeds the 2 MB cap. UI maps to a "too large, please
 // download" affordance with the Download CTA still available.
@@ -229,130 +183,44 @@ export class PreviewUnsupportedError extends Error {
   }
 }
 
+// Domain contract modules are composed onto the instance in the constructor;
+// this interface merge is what puts their operations on the ApiClient type.
+// Sweep PRs repeat the pattern per domain until no inline methods remain.
+// The merge is deliberate mixin wiring — the constructor's Object.assign
+// provides the members the interface declares, and the composition test in
+// client.test.ts guards that they exist at runtime.
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export interface ApiClient extends IssuesContract {}
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class ApiClient {
-  private baseUrl: string;
-  private token: string | null = null;
-  private logger: Logger;
-  private options: ApiClientOptions;
+  private transport: HttpTransport;
 
   constructor(baseUrl: string, options?: ApiClientOptions) {
-    this.baseUrl = baseUrl;
-    this.options = options ?? {};
-    this.logger = options?.logger ?? noopLogger;
+    this.transport = new HttpTransport(baseUrl, options);
+    Object.assign(this, createIssuesContract(this.transport));
   }
 
   getBaseUrl(): string {
-    return this.baseUrl;
+    return this.transport.getBaseUrl();
   }
 
   setToken(token: string | null) {
-    this.token = token;
+    this.transport.setToken(token);
   }
 
-  private readCsrfToken(): string | null {
-    if (typeof document === "undefined") return null;
-    const match = document.cookie
-      .split("; ")
-      .find((c) => c.startsWith("atb_csrf="));
-    return match ? match.split("=")[1] ?? null : null;
+  // Interim JSON path for domains not yet folded into contract modules: the
+  // response-body cast lives here exactly once. Sweep PRs move callers into
+  // per-domain contracts; this helper disappears with the last one.
+  private fetch<T>(path: string, init?: RequestInit): Promise<T> {
+    return this.transport.json(path, init) as Promise<T>;
   }
 
-  private authHeaders(): Record<string, string> {
-    const headers: Record<string, string> = {};
-    if (this.token) headers["Authorization"] = `Bearer ${this.token}`;
-    const slug = getCurrentSlug();
-    if (slug) headers["X-Workspace-Slug"] = slug;
-    const csrf = this.readCsrfToken();
-    if (csrf) headers["X-CSRF-Token"] = csrf;
-    const id = this.options.identity;
-    if (id?.platform) headers["X-Client-Platform"] = id.platform;
-    if (id?.version) headers["X-Client-Version"] = id.version;
-    if (id?.os) headers["X-Client-OS"] = id.os;
-    return headers;
-  }
-
-  private handleUnauthorized() {
-    this.token = null;
-    // Workspace id is owned by the URL-driven workspace-storage singleton
-    // (set by [workspaceSlug]/layout.tsx). On 401, the auth flow navigates
-    // to /login which leaves the workspace route, and the next workspace
-    // entry will overwrite the id. No clear needed here.
-    this.options.onUnauthorized?.();
-  }
-
-  private async parseErrorMessage(res: Response, fallback: string): Promise<string> {
-    try {
-      const data = await res.json() as { error?: string };
-      if (typeof data.error === "string" && data.error) return data.error;
-    } catch {
-      // Ignore non-JSON error bodies.
-    }
-    return fallback;
-  }
-
-  // Reads the response body once for both human-readable error message and
-  // structured fields. The Response stream can only be consumed once, so
-  // both pieces have to come from a single read.
-  private async parseErrorBody(res: Response, fallback: string): Promise<{ message: string; body: unknown }> {
-    try {
-      const data = await res.json() as { error?: string };
-      const message = typeof data.error === "string" && data.error ? data.error : fallback;
-      return { message, body: data };
-    } catch {
-      return { message: fallback, body: undefined };
-    }
-  }
-
-  // Sends the request with the standard headers (auth, CSRF, request id,
-  // client identity) and runs the shared error path (401 → handleUnauthorized,
-  // structured ApiError, status-aware log level). Returns the raw Response so
-  // callers can decide how to decode the body — JSON for the typed `fetch<T>`
-  // path, plain text for the attachment-preview proxy, etc.
-  private async fetchRaw(
+  private fetchRaw(
     path: string,
     init?: RequestInit & { extraHeaders?: Record<string, string> },
   ): Promise<Response> {
-    const rid = createRequestId();
-    const start = Date.now();
-    const method = init?.method ?? "GET";
-
-    const headers: Record<string, string> = {
-      "X-Request-ID": rid,
-      ...this.authHeaders(),
-      ...(init?.extraHeaders ?? {}),
-      ...((init?.headers as Record<string, string>) ?? {}),
-    };
-
-    this.logger.info(`→ ${method} ${path}`, { rid });
-
-    const res = await fetch(`${this.baseUrl}${path}`, {
-      ...init,
-      headers,
-      credentials: "include",
-    });
-
-    if (!res.ok) {
-      if (res.status === 401) this.handleUnauthorized();
-      const { message, body } = await this.parseErrorBody(res, `API error: ${res.status} ${res.statusText}`);
-      const logLevel = res.status === 404 ? "warn" : "error";
-      this.logger[logLevel](`← ${res.status} ${path}`, { rid, duration: `${Date.now() - start}ms`, error: message });
-      throw new ApiError(message, res.status, res.statusText, body);
-    }
-
-    this.logger.info(`← ${res.status} ${path}`, { rid, duration: `${Date.now() - start}ms` });
-    return res;
-  }
-
-  private async fetch<T>(path: string, init?: RequestInit): Promise<T> {
-    const res = await this.fetchRaw(path, {
-      ...init,
-      extraHeaders: { "Content-Type": "application/json" },
-    });
-    // Handle 204 No Content
-    if (res.status === 204) {
-      return undefined as T;
-    }
-    return res.json() as Promise<T>;
+    return this.transport.raw(path, init);
   }
 
   // Auth
@@ -453,33 +321,7 @@ export class ApiClient {
     });
   }
 
-  // Issues
-  async listIssues(params?: ListIssuesParams): Promise<ListIssuesResponse> {
-    const search = new URLSearchParams();
-    if (params?.limit) search.set("limit", String(params.limit));
-    if (params?.offset) search.set("offset", String(params.offset));
-    if (params?.workspace_id) search.set("workspace_id", params.workspace_id);
-    if (params?.status) search.set("status", params.status);
-    if (params?.priority) search.set("priority", params.priority);
-    if (params?.assignee_id) search.set("assignee_id", params.assignee_id);
-    if (params?.assignee_ids?.length) search.set("assignee_ids", params.assignee_ids.join(","));
-    if (params?.creator_id) search.set("creator_id", params.creator_id);
-    if (params?.project_id) search.set("project_id", params.project_id);
-    if (params?.open_only) search.set("open_only", "true");
-    const path = `/api/issues?${search}`;
-    const raw = await this.fetch<unknown>(path);
-    return parseWithFallback(raw, ListIssuesResponseSchema, EMPTY_LIST_ISSUES_RESPONSE, {
-      endpoint: "GET /api/issues",
-    });
-  }
-
-  async searchIssues(params: { q: string; limit?: number; offset?: number; include_closed?: boolean; signal?: AbortSignal }): Promise<SearchIssuesResponse> {
-    const search = new URLSearchParams({ q: params.q });
-    if (params.limit !== undefined) search.set("limit", String(params.limit));
-    if (params.offset !== undefined) search.set("offset", String(params.offset));
-    if (params.include_closed) search.set("include_closed", "true");
-    return this.fetch(`/api/issues/search?${search}`, params.signal ? { signal: params.signal } : undefined);
-  }
+  // Issues live in packages/core/issues/contract.ts (composed in above).
 
   async searchProjects(params: { q: string; limit?: number; offset?: number; include_closed?: boolean; signal?: AbortSignal }): Promise<SearchProjectsResponse> {
     const search = new URLSearchParams({ q: params.q });
@@ -487,29 +329,6 @@ export class ApiClient {
     if (params.offset !== undefined) search.set("offset", String(params.offset));
     if (params.include_closed) search.set("include_closed", "true");
     return this.fetch(`/api/projects/search?${search}`, params.signal ? { signal: params.signal } : undefined);
-  }
-
-  async getIssue(id: string): Promise<Issue> {
-    return this.fetch(`/api/issues/${id}`);
-  }
-
-  async createIssue(data: CreateIssueRequest): Promise<Issue> {
-    return this.fetch("/api/issues", {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
-  }
-
-  async quickCreateIssue(data: {
-    agent_id?: string;
-    squad_id?: string;
-    prompt: string;
-    project_id?: string | null;
-  }): Promise<{ task_id: string }> {
-    return this.fetch("/api/issues/quick-create", {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
   }
 
   async createFeedback(data: {
@@ -520,42 +339,6 @@ export class ApiClient {
     return this.fetch("/api/feedback", {
       method: "POST",
       body: JSON.stringify(data),
-    });
-  }
-
-  async updateIssue(id: string, data: UpdateIssueRequest): Promise<Issue> {
-    return this.fetch(`/api/issues/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(data),
-    });
-  }
-
-  async listChildIssues(id: string): Promise<{ issues: Issue[] }> {
-    const raw = await this.fetch<unknown>(`/api/issues/${id}/children`);
-    return parseWithFallback(raw, ChildIssuesResponseSchema, { issues: [] }, {
-      endpoint: "GET /api/issues/:id/children",
-    });
-  }
-
-  async getChildIssueProgress(): Promise<{ progress: { parent_issue_id: string; total: number; done: number }[] }> {
-    return this.fetch("/api/issues/child-progress");
-  }
-
-  async deleteIssue(id: string): Promise<void> {
-    await this.fetch(`/api/issues/${id}`, { method: "DELETE" });
-  }
-
-  async batchUpdateIssues(issueIds: string[], updates: UpdateIssueRequest): Promise<{ updated: number }> {
-    return this.fetch("/api/issues/batch-update", {
-      method: "POST",
-      body: JSON.stringify({ issue_ids: issueIds, updates }),
-    });
-  }
-
-  async batchDeleteIssues(issueIds: string[]): Promise<{ deleted: number }> {
-    return this.fetch("/api/issues/batch-delete", {
-      method: "POST",
-      body: JSON.stringify({ issue_ids: issueIds }),
     });
   }
 
@@ -577,19 +360,6 @@ export class ApiClient {
         ...(attachmentIds?.length ? { attachment_ids: attachmentIds } : {}),
       }),
     });
-  }
-
-  async listTimeline(issueId: string): Promise<TimelineEntry[]> {
-    const raw = await this.fetch<unknown>(
-      `/api/issues/${issueId}/timeline`,
-    );
-    return parseWithFallback(raw, TimelineEntriesSchema, EMPTY_TIMELINE_ENTRIES, {
-      endpoint: "GET /api/issues/:id/timeline",
-    });
-  }
-
-  async getAssigneeFrequency(): Promise<AssigneeFrequencyEntry[]> {
-    return this.fetch("/api/assignee-frequency");
   }
 
   async updateComment(commentId: string, content: string, attachmentIds?: string[]): Promise<Comment> {
@@ -941,30 +711,12 @@ export class ApiClient {
     return this.fetch(`/api/agent-run-counts`);
   }
 
-  async getActiveTasksForIssue(issueId: string): Promise<{ tasks: AgentTask[] }> {
-    return this.fetch(`/api/issues/${issueId}/active-task`);
-  }
-
   async listTaskMessages(taskId: string): Promise<TaskMessagePayload[]> {
     return this.fetch(`/api/tasks/${taskId}/messages`);
   }
 
-  async listTasksByIssue(issueId: string): Promise<AgentTask[]> {
-    return this.fetch(`/api/issues/${issueId}/task-runs`);
-  }
-
-  async getIssueUsage(issueId: string): Promise<IssueUsageSummary> {
-    return this.fetch(`/api/issues/${issueId}/usage`);
-  }
-
   async cancelTask(issueId: string, taskId: string): Promise<AgentTask> {
     return this.fetch(`/api/issues/${issueId}/tasks/${taskId}/cancel`, {
-      method: "POST",
-    });
-  }
-
-  async rerunIssue(issueId: string): Promise<AgentTask> {
-    return this.fetch(`/api/issues/${issueId}/rerun`, {
       method: "POST",
     });
   }
@@ -1191,23 +943,23 @@ export class ApiClient {
 
     const rid = createRequestId();
     const start = Date.now();
-    this.logger.info("→ POST /api/upload-file", { rid });
+    this.transport.logger.info("→ POST /api/upload-file", { rid });
 
-    const res = await fetch(`${this.baseUrl}/api/upload-file`, {
+    const res = await fetch(`${this.transport.getBaseUrl()}/api/upload-file`, {
       method: "POST",
-      headers: this.authHeaders(),
+      headers: this.transport.authHeaders(),
       body: formData,
       credentials: "include",
     });
 
     if (!res.ok) {
-      if (res.status === 401) this.handleUnauthorized();
-      const message = await this.parseErrorMessage(res, `Upload failed: ${res.status}`);
-      this.logger.error(`← ${res.status} /api/upload-file`, { rid, duration: `${Date.now() - start}ms`, error: message });
+      if (res.status === 401) this.transport.handleUnauthorized();
+      const message = await this.transport.parseErrorMessage(res, `Upload failed: ${res.status}`);
+      this.transport.logger.error(`← ${res.status} /api/upload-file`, { rid, duration: `${Date.now() - start}ms`, error: message });
       throw new Error(message);
     }
 
-    this.logger.info(`← ${res.status} /api/upload-file`, { rid, duration: `${Date.now() - start}ms` });
+    this.transport.logger.info(`← ${res.status} /api/upload-file`, { rid, duration: `${Date.now() - start}ms` });
     const raw = (await res.json()) as unknown;
     return parseWithFallback(raw, AttachmentResponseSchema, EMPTY_ATTACHMENT, {
       endpoint: "POST /api/upload-file",
