@@ -33,8 +33,7 @@ export const RESERVED_SLUGS: ReadonlySet<string> = new Set([
   // Platform / marketing routes (current + likely-future)
   // `auto-tobe` is reserved as the brand name to block impersonation workspaces.
   // `www`, `new`, `home`, `homepage`, `dashboard` are confusables or
-  // likely-future global landing/entry routes; `homepage` matches the existing
-  // `/homepage` landing variant in apps/web.
+  // likely-future global landing/entry routes.
   "api",
   "admin",
   "auto-tobe",
