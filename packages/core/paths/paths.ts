@@ -49,7 +49,6 @@ export const paths = {
   invite: (id: string) => `/invite/${encode(id)}`,
   invitations: () => "/invitations",
   onboarding: () => "/onboarding",
-  authCallback: () => "/auth/callback",
   root: () => "/",
 };
 

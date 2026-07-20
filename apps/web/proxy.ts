@@ -75,15 +75,26 @@ export function proxy(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // --- Root path: redirect logged-in users to their last workspace ---
-  if (pathname === "/" && hasSession && lastSlug) {
-    const url = req.nextUrl.clone();
-    url.pathname = `/${lastSlug}/issues`;
-    return NextResponse.redirect(url);
+  // --- Root path: `/` is a pure entry hop, never a rendered landing ---
+  //  - logged-in with a known workspace → straight there (server-side, no flash)
+  //  - logged-out                        → /login
+  //  - logged-in but no workspace cookie yet (first login) → fall through to the
+  //    root page, which resolves the destination from the workspace list client-side
+  if (pathname === "/") {
+    if (hasSession && lastSlug) {
+      const url = req.nextUrl.clone();
+      url.pathname = `/${lastSlug}/issues`;
+      return NextResponse.redirect(url);
+    }
+    if (!hasSession) {
+      const url = req.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
+    }
   }
 
   // --- Default: forward locale header to RSC, no redirect/rewrite ---
-  // Covers logged-out root path, /login, /:slug/*, and everything else.
+  // Covers /login, the first-login root path, /:slug/*, and everything else.
   return nextWithLocale(req);
 }
 

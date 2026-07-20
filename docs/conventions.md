@@ -257,8 +257,8 @@ Examples:
 - Shared copy: top level of the namespace JSON
 - Web-only: `web` section
 
-See `auth.json` for the canonical example (the `web` section holds the
-`desktop_handoff.*` strings for the dormant browser→CLI login handoff).
+Add a `web` section to a namespace only for copy that lives on the web
+surface alone. No namespace currently carries one.
 
 ---
 

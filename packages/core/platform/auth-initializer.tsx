@@ -52,7 +52,6 @@ export function AuthInitializer({
         if (cfg.cdn_domain) configStore.getState().setCdnDomain(cfg.cdn_domain);
         configStore.getState().setAuthConfig({
           allowSignup: cfg.allow_signup,
-          googleClientId: cfg.google_client_id,
         });
         if (cfg.posthog_key) {
           initAnalytics({

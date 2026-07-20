@@ -70,34 +70,24 @@ export const viewport: Viewport = {
   ],
 };
 
+// Login-first app entry — no public marketing surface. Metadata is trimmed to
+// app-appropriate defaults: a plain product title, a neutral description, and
+// `noindex` so the private app isn't crawled. Marketing-only fields (OpenGraph
+// social card, Twitter handles, canonical) were removed with the landing.
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.auto-tobe.ai"),
   title: {
-    default: "auto-tobe — Project Management for Human + Agent Teams",
+    default: "auto-tobe",
     template: "%s | auto-tobe",
   },
-  description:
-    "Open-source platform that turns coding agents into real teammates. Assign tasks, track progress, compound skills.",
+  description: "Task management for human and agent teams.",
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
     shortcut: ["/favicon.svg"],
   },
-  openGraph: {
-    type: "website",
-    siteName: "auto-tobe",
-    locale: "en_US",
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@atb_hq",
-    creator: "@atb_hq",
-  },
-  alternates: {
-    canonical: "/",
-  },
   robots: {
-    index: true,
-    follow: true,
+    index: false,
+    follow: false,
   },
 };
 
