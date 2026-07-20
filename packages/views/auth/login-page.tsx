@@ -45,9 +45,6 @@ interface LoginPageProps {
   cliCallback?: CliCallbackConfig;
   /** Called after a token is obtained (e.g. to set cookies). */
   onTokenObtained?: () => void;
-  /** Slot rendered at the bottom of the sign-in card, below the
-   *  primary actions. */
-  extra?: ReactNode;
 }
 
 // ---------------------------------------------------------------------------
@@ -117,7 +114,6 @@ export function LoginPage({
   onSuccess,
   cliCallback,
   onTokenObtained,
-  extra,
 }: LoginPageProps) {
   const { t } = useT("auth");
   const qc = useQueryClient();
@@ -443,7 +439,6 @@ export function LoginPage({
               ? t(($) => $.signin.sending)
               : t(($) => $.signin.continue)}
           </Button>
-          {extra && <div className="w-full pt-1 text-center">{extra}</div>}
         </CardFooter>
       </Card>
     </AuthScreen>
