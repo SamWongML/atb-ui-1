@@ -27,10 +27,25 @@ const borderedSizes = {
 };
 
 /**
- * Pure CSS 8-pointed asterisk icon matching the auto-tobe logo.
- * Uses currentColor so it adapts to light/dark themes automatically.
- * Clip-path polygon traced from the original SVG path coordinates.
+ * The auto-tobe "Orbit" mark: a single node riding a closed ring.
+ * A single-color silhouette drawn with `currentColor` (stroke + fill), so it
+ * adapts to light/dark themes and any context automatically, and revolves as a
+ * true orbit when a loader spins the wrapper.
  */
+function OrbitMark() {
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      className="block size-full"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle cx="50" cy="50" r="31" stroke="currentColor" strokeWidth="9" />
+      <circle cx="50" cy="19" r="11" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function AtbIcon({
   className,
   animate = false,
@@ -46,15 +61,6 @@ export function AtbIcon({
     const timer = setTimeout(() => setEntranceDone(true), 600);
     return () => clearTimeout(timer);
   }, [animate]);
-
-  const clipPath = `polygon(
-    45% 62.1%, 45% 100%, 55% 100%, 55% 62.1%,
-    81.8% 88.9%, 88.9% 81.8%, 62.1% 55%, 100% 55%,
-    100% 45%, 62.1% 45%, 88.9% 18.2%, 81.8% 11.1%,
-    55% 37.9%, 55% 0%, 45% 0%, 45% 37.9%,
-    18.2% 11.1%, 11.1% 18.2%, 37.9% 45%, 0% 45%,
-    0% 55%, 37.9% 55%, 11.1% 81.8%, 18.2% 88.9%
-  )`;
 
   if (bordered) {
     const sizeConfig = borderedSizes[size];
@@ -76,10 +82,7 @@ export function AtbIcon({
             entranceDone && !noSpin && "hover:animate-spin"
           )}
         >
-          <span
-            className="block size-full bg-current"
-            style={{ clipPath }}
-          />
+          <OrbitMark />
         </span>
       </span>
     );
@@ -96,10 +99,7 @@ export function AtbIcon({
       aria-hidden="true"
       {...props}
     >
-      <span
-        className="block size-full bg-current"
-        style={{ clipPath }}
-      />
+      <OrbitMark />
     </span>
   );
 }
