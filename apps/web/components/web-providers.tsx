@@ -10,6 +10,7 @@ import {
   setLoggedInCookie,
   clearLoggedInCookie,
 } from "@/features/auth/auth-cookie";
+import { MockProvider } from "@/mocks/mock-provider";
 import { PageviewTracker } from "./pageview-tracker";
 
 // Legacy token in localStorage → keep this session in token mode so users who
@@ -51,23 +52,29 @@ export function WebProviders({
   );
   const localeAdapter = useMemo(() => createBrowserCookieLocaleAdapter(), []);
   return (
-    <CoreProvider
-      apiBaseUrl={process.env.NEXT_PUBLIC_ATB_API_URL}
-      wsUrl={process.env.NEXT_PUBLIC_ATB_GATEWAY_WS_URL}
-      cookieAuth={cookieAuth}
-      onLogin={setLoggedInCookie}
-      onLogout={clearLoggedInCookie}
-      identity={identity}
-      locale={locale}
-      resources={resources}
-      localeAdapter={localeAdapter}
-    >
-      {/* Suspense boundary is required by Next.js for useSearchParams in
-          a client component mounted this high in the tree. */}
-      <Suspense fallback={null}>
-        <PageviewTracker />
-      </Suspense>
-      <WebNavigationProvider>{children}</WebNavigationProvider>
-    </CoreProvider>
+    // MockProvider is a no-op unless the dev mock flag is set; when it is, it
+    // starts the MSW worker and holds the tree until the worker intercepts, so
+    // CoreProvider's boot-time API calls hit the mocks. It is stripped from
+    // production builds (see mock-provider.tsx).
+    <MockProvider>
+      <CoreProvider
+        apiBaseUrl={process.env.NEXT_PUBLIC_ATB_API_URL}
+        wsUrl={process.env.NEXT_PUBLIC_ATB_GATEWAY_WS_URL}
+        cookieAuth={cookieAuth}
+        onLogin={setLoggedInCookie}
+        onLogout={clearLoggedInCookie}
+        identity={identity}
+        locale={locale}
+        resources={resources}
+        localeAdapter={localeAdapter}
+      >
+        {/* Suspense boundary is required by Next.js for useSearchParams in
+            a client component mounted this high in the tree. */}
+        <Suspense fallback={null}>
+          <PageviewTracker />
+        </Suspense>
+        <WebNavigationProvider>{children}</WebNavigationProvider>
+      </CoreProvider>
+    </MockProvider>
   );
 }
