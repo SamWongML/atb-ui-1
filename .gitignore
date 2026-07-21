@@ -26,8 +26,8 @@ apps/web/test-results/
 # context (agent workspace)
 .context
 
-# local settings
-.claude/
+# local settings (keep .claude/skills etc. tracked so they ship with clones)
+.claude/settings.local.json
 .tool-versions
 
 # feature tracking
