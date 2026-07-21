@@ -58,3 +58,7 @@ catalog:
   "@testing-library/react": "^16.3.2"
   "@testing-library/jest-dom": "^6.9.1"
   "@testing-library/user-event": "^14.6.1"
+
+  # API mocking (MSW) — powers dev-only offline mode (browser worker) and the
+  # handler contract tests (msw/node). Gated out of production builds.
+  msw: "^2.15.0"
